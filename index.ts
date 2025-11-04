@@ -1,0 +1,1 @@
+export { default as rehiLogo } from "./src/public/icons/rehi.svg";
