@@ -30,7 +30,7 @@ export const ArticleService = {
     return http.get<PublicArticle[]>(`/public/articles`);
   },
   async clonePublicArticle(articleId: string) {
-    return http.delete(`/public/articles/${articleId}/clone`);
+    return http.post(`/public/articles/${articleId}/clone`);
   },
 };
 
