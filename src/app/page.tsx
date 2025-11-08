@@ -36,8 +36,14 @@ const SOCIAL_ICONS = [Instagram, Facebook, Spool, Twitter, Linkedin] as const;
 // Optimized components
 const PricingCard = ({ plan }: { plan: PricingPlan }) => {
   const { subscription } = useSubscriptionStore();
+  const router = useRouter();
 
   const isSubscribed = subscription && subscription.id === plan.id;
+
+  const handleSubscribe = () => {
+    router.push("/subscription");
+  };
+
   return (
     <div className="relative w-full max-w-[305px] h-screen max-h-[447px] py-4.5 px-4.5 flex flex-col justify-between border border-gray-200 rounded-xl shadow-lg transition-all duration-300 hover:shadow-xl">
       <div className="flex flex-col justify-start gap-2">
@@ -59,6 +65,7 @@ const PricingCard = ({ plan }: { plan: PricingPlan }) => {
         {plan.id !== "3fa85f64-5717-4562-b3fc-2c963f66afa6" && (
           <Button
             disabled={isSubscribed ?? false}
+            onClick={handleSubscribe}
             className={`px-4 py-2 rounded transition-all duration-200 ${
               isSubscribed
                 ? "bg-gray-500 text-white border border-gray-500 cursor-default"
