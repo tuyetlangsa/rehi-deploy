@@ -188,7 +188,6 @@ export default function SubscriptionPage() {
           <SubscribeDialog
             open={openDialog}
             onClose={() => setOpenDialog(false)}
-            provider={selectedPlan.provider}
             subscriptionId={selectedPlan.id}
           />
         )}

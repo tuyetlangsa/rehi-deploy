@@ -28,17 +28,20 @@ import { toast } from "sonner";
 import { useSubscriptionStore } from "@/store/subscription-store";
 import { useCancelSubscription } from "@/hooks/use-subscription";
 import { SubscriptionStatus } from "@/model/subscription";
+import { useEmailReminder } from "@/hooks/use-email-reminder";
 
 interface ProfileFormData {
   email: string;
   phone: string;
   username: string;
+  reminderTime: string;
 }
 
 type EditableField = keyof ProfileFormData;
 
 const DEFAULT_PHONE = "+84 34 944 5821";
 const DEFAULT_USERNAME = "Username";
+const DEFAULT_REMINDER_TIME = "09:00";
 
 export default function ProfileSettings() {
   const [editingField, setEditingField] = useState<EditableField | null>(null);
@@ -59,6 +62,7 @@ export default function ProfileSettings() {
       email: "",
       phone: "",
       username: "",
+      reminderTime: "",
     },
   });
 
@@ -87,6 +91,7 @@ export default function ProfileSettings() {
         email: user.email || "",
         phone: user.phone || DEFAULT_PHONE,
         username: user.username || DEFAULT_USERNAME,
+        reminderTime: user.reminderTime || DEFAULT_REMINDER_TIME,
       });
     }
   }, [user, reset]);
@@ -119,23 +124,47 @@ export default function ProfileSettings() {
     }
   }, [cancelSubscription, fetchSubscription]);
 
+  const mutation = useEmailReminder();
+  const handleUpdateReminderTime = useCallback(async (time: string) => {
+    setIsSaving(true);
+    try {
+      await mutation.mutateAsync(time);
+      await new Promise((resolve) => setTimeout(resolve, 500));
+
+      toast.success("Reminder time updated successfully");
+      setEditingField(null);
+    } catch (error) {
+      toast.error("Failed to update reminder time. Please try again.");
+      console.error("Reminder time update error:", error);
+    } finally {
+      setIsSaving(false);
+    }
+  }, []);
+
   const onSubmit = useCallback(
     async (data: ProfileFormData) => {
       if (!editingField) return;
 
+      // Handle reminder time separately
+      if (editingField === "reminderTime") {
+        await handleUpdateReminderTime(data.reminderTime);
+        return;
+      }
+
+      // TODO: Handle other fields (email, phone) when APIs are ready
       setIsSaving(true);
       try {
-        const response = await fetch("/api/profile", {
-          method: "PATCH",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ [editingField]: data[editingField] }),
-        });
+        // const response = await fetch("/api/profile", {
+        //   method: "PATCH",
+        //   headers: { "Content-Type": "application/json" },
+        //   body: JSON.stringify({ [editingField]: data[editingField] }),
+        // });
 
-        if (!response.ok) {
-          throw new Error("Failed to update profile");
-        }
+        // if (!response.ok) {
+        //   throw new Error("Failed to update profile");
+        // }
 
-        toast.success(`${editingField} updated successfully`);
+        toast.info(`${editingField} update not implemented yet`);
         setEditingField(null);
       } catch (error) {
         toast.error("Failed to update profile. Please try again.");
@@ -144,7 +173,7 @@ export default function ProfileSettings() {
         setIsSaving(false);
       }
     },
-    [editingField]
+    [editingField, handleUpdateReminderTime]
   );
 
   const renderEditableField = useCallback(
@@ -223,7 +252,17 @@ export default function ProfileSettings() {
         </div>
       );
     },
-    [editingField, errors, isSaving, isDirty, register, handleEdit, handleCancelEdit, handleSubmit, onSubmit]
+    [
+      editingField,
+      errors,
+      isSaving,
+      isDirty,
+      register,
+      handleEdit,
+      handleCancelEdit,
+      handleSubmit,
+      onSubmit,
+    ]
   );
 
   const canCancelSubscription =
@@ -268,10 +307,11 @@ export default function ProfileSettings() {
             <h2 className="text-xl font-semibold">{user?.name || "User"}</h2>
           </div>
 
-          <form className="grid grid-cols-1 gap-6 md:grid-cols-2">
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
             {renderEditableField("Email", "email", "email")}
             {renderEditableField("Phone number", "phone", "tel")}
-          </form>
+            {renderEditableField("Daily reminder time", "reminderTime", "time")}
+          </div>
         </section>
 
         {/* Subscription */}
