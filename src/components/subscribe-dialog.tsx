@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   Dialog,
   DialogContent,
@@ -19,6 +19,7 @@ interface SubscribeDialogProps {
   open: boolean;
   onClose: () => void;
   subscriptionId: string;
+  provider?: string;
 }
 
 const PROVIDERS = [
@@ -40,12 +41,22 @@ export function SubscribeDialog({
   open,
   onClose,
   subscriptionId,
+  provider,
 }: SubscribeDialogProps) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [selectedProvider, setSelectedProvider] = useState<string | null>(null);
+  const [selectedProvider, setSelectedProvider] = useState<string | null>(
+    provider || null
+  );
 
   const createSubscription = useCreateSubscription();
+
+  // Sync selectedProvider with provider prop when dialog opens
+  useEffect(() => {
+    if (open && provider) {
+      setSelectedProvider(provider);
+    }
+  }, [open, provider]);
 
   const handleSubscribe = async () => {
     if (!selectedProvider) {
