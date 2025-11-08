@@ -65,8 +65,8 @@ const PricingCard = ({
             onClick={() => onSubscribe(plan.id)}
             className={`px-4 py-2 rounded transition-all duration-200 ${
               isSubscribed
-          ? "bg-gray-500 text-white border border-gray-500 cursor-default"
-          : "bg-gray-100 text-gray-900 hover:bg-gray-200 border border-gray-300"
+                ? "bg-gray-500 text-white border border-gray-500 cursor-default"
+                : "bg-gray-100 text-gray-900 hover:bg-gray-200 border border-gray-300"
             }`}
           >
             {isSubscribed ? "Subscribed" : "Subscribe Now"}
@@ -189,6 +189,7 @@ export default function SubscriptionPage() {
             open={openDialog}
             onClose={() => setOpenDialog(false)}
             subscriptionId={selectedPlan.id}
+            provider={selectedPlan.provider}
           />
         )}
 

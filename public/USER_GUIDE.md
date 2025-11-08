@@ -45,8 +45,16 @@ Rehi is an AI-powered knowledge management platform designed to help you read, h
 1. Install **rehi-browser-extension** from Chrome Web Store
 2. Pin the extension to your browser toolbar
 3. Open the extension popup
-4. Click "Login" to authenticate
-5. You're now ready to save articles directly from the web!
+4. You'll see the login screen if you're not authenticated:
+
+![Extension Login Screen](/guide-picture/not-login-extension.png)
+
+5. Click "Login" to authenticate
+6. After successful login, you'll see the authenticated extension interface:
+
+![Extension After Login](/guide-picture/login-success-extension.png)
+
+7. You're now ready to save articles directly from the web!
 
 ---
 
@@ -55,17 +63,20 @@ Rehi is an AI-powered knowledge management platform designed to help you read, h
 ### Save Article by Browser Extension
 
 **Prerequisites:**
+
 - Install rehi-browser-extension from Chrome store
 - Pin the extension and open popup
 - Click button login in the popup
 
 **To Save an Article:**
+
 1. Navigate to any article you want to save
 2. Press **Alt + R** (Rehi shortcut)
 3. The article will be automatically saved to your Rehi library
 4. Highlighting is now enabled - you can highlight directly on the original article page
 
 **What Gets Saved:**
+
 - Article title, URL, and content
 - Author information
 - Article summary (auto-generated)
@@ -75,6 +86,7 @@ Rehi is an AI-powered knowledge management platform designed to help you read, h
 ### Revisit Article with Highlights
 
 **To View Your Highlights:**
+
 1. Navigate to a previously saved article
 2. Press **Alt + R** to activate Rehi mode
 3. All your previous highlights will be displayed on the article
@@ -108,6 +120,8 @@ Rehi is an AI-powered knowledge management platform designed to help you read, h
 - Active page highlighting
 - Quick access to all major features
 
+![Navigation Sidebar](/guide-picture/navigation-sidebar.png)
+
 ---
 
 ### 2. Articles Management
@@ -117,6 +131,7 @@ Rehi is an AI-powered knowledge management platform designed to help you read, h
 **Article Locations:**
 
 Articles can be organized into three locations accessed via URL parameters:
+
 - **Reading** (`/articles?location=reading`) - Default, articles you're currently reading
 - **Later** (`/articles?location=later`) - Articles saved for later reading
 - **Archived** (`/articles?location=archived`) - Completed or archived articles
@@ -124,6 +139,7 @@ Articles can be organized into three locations accessed via URL parameters:
 **Article Item Actions:**
 
 Each article card provides:
+
 - **Click article card**: Opens full article view
 - **Three-dot menu (⋯)**:
   - **Copy article URL**: Copy article link to clipboard
@@ -132,7 +148,10 @@ Each article card provides:
   - **Move to**: Change article location (Reading/Later/Archived)
   - **Move to Trash**: Soft delete article
 
+![Three Dot Actions Menu](/guide-picture/three-dot-actions.png)
+
 **Article Information Display:**
+
 - Article thumbnail image
 - Title and summary
 - Tags (if assigned)
@@ -146,14 +165,19 @@ Each article card provides:
    - **Text search**: Type keywords to search in title, summary, or content
    - **Tag filter**: `tag:ai` or `tag:javascript`
    - **Author filter**: `author:john`
-   - **Combined filters**: 
+   - **Combined filters**:
      - `tag:ai and author:john` (both conditions)
      - `tag:ai or tag:javascript` (either condition)
      - `tag:ai and author:john or tag:javascript` (complex queries)
 3. Press **Enter** to search
 4. Press **Escape** to close palette
 
+![Search Article](/guide-picture/search-article.png)
+
+![Filter Article](/guide-picture/filter-article.png)
+
 **Tag Management on Articles:**
+
 - Click "Add article tag" from menu
 - Type tag name or select from existing tags
 - Tags are auto-created if they don't exist
@@ -165,7 +189,10 @@ Each article card provides:
 
 #### Article Detail Page (`/articles/[articleId]`)
 
+![Article Detail Page](/guide-picture/article-detail.png)
+
 **Article Header:**
+
 - Back to Articles button
 - Article title
 - Author, publication date, reading time
@@ -173,6 +200,7 @@ Each article card provides:
 - Info sidebar toggle button
 
 **Left Sidebar (Article Navigation):**
+
 - Auto-generated table of contents from article headings
 - Click any heading to jump to that section
 - Highlights active section as you scroll
@@ -188,7 +216,10 @@ Each article card provides:
    - Click **+** to increase
 4. Settings apply immediately to article content
 
+![Reading Preferences](/guide-picture/reading-preference.png)
+
 **Article Content:**
+
 - Clean, readable HTML rendering
 - Scrollable content area
 - Highlights automatically applied and visible
@@ -209,6 +240,10 @@ Each article card provides:
    - **Ask Rehi button**: Ask AI about selected text
 3. Click highlight button to save
 4. Highlight is saved and displayed immediately
+
+![Highlight System 1](/guide-picture/highlight-system1.png)
+
+![Highlight System 2](/guide-picture/highlight-system2.png)
 
 **Method 2: From Browser Extension**
 
@@ -238,16 +273,20 @@ Each article card provides:
    - Creation timestamp
 
 **Interact with Highlights:**
+
 - **Click highlight in sidebar**: Scrolls to highlight location in article
 - **Add/edit note**: Click "Click to add a note" or edit icon
 - **Delete highlight**: Hover over highlight, click trash icon
 - **View highlight context**: Click highlight text to jump to location
 
 **Highlight Notes:**
+
 - Add contextual notes to any highlight
 - Edit notes anytime
 - Notes appear below highlight text
 - Notes are saved with highlights and synced
+
+![Create Highlight Note](/guide-picture/create-highlight-note.png)
 
 ---
 
@@ -267,6 +306,7 @@ Each article card provides:
 5. Notes are saved per article
 
 **Use Cases:**
+
 - Overall article summary
 - Key takeaways
 - Personal reflections
@@ -284,6 +324,7 @@ Each article card provides:
 5. Notes appear below highlight text with "Note:" label
 
 **Edit Highlight Notes:**
+
 - Hover over note, click edit icon
 - Modify note text
 - Save or cancel changes
@@ -295,6 +336,7 @@ Each article card provides:
 #### General Chat (`/chat`)
 
 **Features:**
+
 - General AI assistant powered by your saved articles
 - Chat history panel (left sidebar)
 - Multiple chat sessions support
@@ -310,21 +352,26 @@ Each article card provides:
 6. Click article preview to navigate to full article
 
 **Chat Sessions:**
+
 - **New Chat**: Start fresh conversation (button in history panel)
 - **Chat History**: All previous conversations listed
 - **Switch Sessions**: Click any session in history to resume
 - **Clear Chat**: Delete all messages in current session (trash icon)
 
 **Message Features:**
+
 - Markdown rendering in AI responses
 - Code syntax highlighting
 - Links and formatting
 - Timestamps on hover
 - Smooth scrolling to new messages
 
+![General Chat](/guide-picture/general-chat.png)
+
 #### Article-Specific Chat (Info Sidebar)
 
 **Features:**
+
 - Context-aware chat about current article
 - Available in article detail page
 - Access via Info Sidebar → Chat tab
@@ -346,9 +393,12 @@ Each article card provides:
 5. Press Enter to send
 
 **Chat History:**
+
 - Per-article chat history
 - Persists across sessions
 - Only visible when viewing that article
+
+![Article Specific Chat](/guide-picture/article-specific-chat.png)
 
 ---
 
@@ -376,15 +426,19 @@ Review flashcards scheduled for today using spaced repetition algorithm.
 5. System schedules next review based on your feedback
 
 **Navigation:**
+
 - **Previous/Next**: Navigate through flashcards
 - **Card indicators**: Dots show position in deck
 - **Go to Article**: Click article title to view source
 
 **Spaced Repetition:**
+
 - System automatically schedules reviews
 - Based on your performance feedback
 - More difficult cards appear more frequently
 - Easy cards appear less frequently
+
+![Flashcard Review](/guide-picture/flashcard-review.png)
 
 #### Master Flashcard (`/flashcard`)
 
@@ -401,6 +455,7 @@ View and study all flashcards across all articles, not just scheduled reviews.
 5. Study at your own pace
 
 **Features:**
+
 - Shows category (article title)
 - Question format with fill-in-the-blank style
 - Answer revealed on demand
@@ -433,6 +488,7 @@ View and study all flashcards across all articles, not just scheduled reviews.
 4. Confirmation may be required
 
 **Tag Usage:**
+
 - Assign multiple tags to articles
 - Filter articles by tags using search: `tag:tagname`
 - Tags help organize articles by topic, subject, or category
@@ -450,9 +506,11 @@ View and study all flashcards across all articles, not just scheduled reviews.
 3. Same article card format as main articles page
 
 **Restore Articles:**
+
 - (Feature may require implementation - check UI for restore option)
 
 **Permanent Delete:**
+
 - (Feature may require implementation - check UI for permanent delete)
 
 ---
@@ -471,6 +529,7 @@ View and study all flashcards across all articles, not just scheduled reviews.
 3. Article moves to selected location
 
 **Location Filtering:**
+
 - Articles automatically filtered by location
 - URL parameter controls location: `?location=reading|later|archived`
 - Default location: Reading
@@ -484,12 +543,14 @@ View and study all flashcards across all articles, not just scheduled reviews.
 **Search Syntax:**
 
 **Basic Text Search:**
+
 ```
 neural networks
 javascript frameworks
 ```
 
 **Tag Filters:**
+
 ```
 tag:ai
 tag:javascript
@@ -498,6 +559,7 @@ tag:ai or tag:javascript
 ```
 
 **Author Filters:**
+
 ```
 author:john
 author:smith
@@ -505,12 +567,14 @@ author:john and tag:ai
 ```
 
 **Complex Queries:**
+
 ```
 tag:ai and author:john or tag:javascript
 neural networks and tag:ai
 ```
 
 **Boolean Operators:**
+
 - `and`: All conditions must match
 - `or`: Any condition can match
 - Can combine multiple filters
@@ -518,29 +582,35 @@ neural networks and tag:ai
 ### 2. Keyboard Shortcuts
 
 **Command Palette:**
+
 - `Ctrl + K` / `Cmd + K`: Open search command palette
 - `Escape`: Close command palette
 
 **Article Navigation:**
+
 - Scroll to navigate
 - Click headings in left sidebar to jump to sections
 
 **Chat:**
+
 - `Enter`: Send message
 - `Shift + Enter`: New line in message
 
 **Browser Extension:**
+
 - `Alt + R`: Save article / Show highlights
 
 ### 3. Data Synchronization
 
 **Offline-First Architecture:**
+
 - Articles and highlights stored locally (IndexedDB)
 - Automatic sync with server when online
 - Last update timestamp tracked
 - Works offline with sync on reconnect
 
 **Cross-Device Sync:**
+
 - All data synced across devices
 - Browser extension highlights sync with web app
 - Real-time updates when online
@@ -601,27 +671,27 @@ neural networks and tag:ai
 
 ### Core Features
 
-✅ Article saving from browser extension  
-✅ Article management (Reading/Later/Archived)  
-✅ Smart text highlighting with color coding  
-✅ Highlight notes and article notes  
-✅ AI-powered chat (general and article-specific)  
-✅ Flashcard generation from highlights  
-✅ Spaced repetition review system  
-✅ Tag-based organization  
-✅ Advanced search with filters  
-✅ Reading preferences customization  
-✅ Cross-device synchronization  
-✅ Table of contents navigation  
+✅ Article saving from browser extension
+✅ Article management (Reading/Later/Archived)
+✅ Smart text highlighting with color coding
+✅ Highlight notes and article notes
+✅ AI-powered chat (general and article-specific)
+✅ Flashcard generation from highlights
+✅ Spaced repetition review system
+✅ Tag-based organization
+✅ Advanced search with filters
+✅ Reading preferences customization
+✅ Cross-device synchronization
+✅ Table of contents navigation
 
 ### Coming Soon / Under Development
 
-⏳ Library page (placeholder)  
-⏳ Settings page (placeholder)  
-⏳ Share page (placeholder)  
-⏳ Group sharing features  
-⏳ PDF export  
-⏳ Note translation  
+⏳ Library page (placeholder)
+⏳ Settings page (placeholder)
+⏳ Share page (placeholder)
+⏳ Group sharing features
+⏳ PDF export
+⏳ Note translation
 
 ---
 

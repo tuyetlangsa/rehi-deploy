@@ -1,10 +1,6 @@
 "use client";
 
-import {
-  getAccessToken,
-  useUser,
-  withPageAuthRequired,
-} from "@auth0/nextjs-auth0";
+import { getAccessToken, useUser } from "@auth0/nextjs-auth0";
 import React, { useEffect, useState } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
@@ -420,6 +416,20 @@ function GuidePage() {
                   {children}
                 </td>
               ),
+              img: ({
+                src,
+                alt,
+                ...props
+              }: { src?: string; alt?: string } & any) => (
+                <div className="my-6 flex justify-center">
+                  <img
+                    src={src || ""}
+                    alt={alt || ""}
+                    className="rounded-lg border border-border shadow-lg max-w-full h-auto"
+                    {...props}
+                  />
+                </div>
+              ),
             }}
           >
             {markdownContent}
@@ -430,4 +440,4 @@ function GuidePage() {
   );
 }
 
-export default withPageAuthRequired(GuidePage);
+export default GuidePage;
