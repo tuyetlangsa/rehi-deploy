@@ -141,15 +141,7 @@ const SidebarProvider = React.forwardRef<
         setOpenMobile,
         toggleSidebar,
       }),
-      [
-        state,
-        open,
-        setOpen,
-        isMobile,
-        openMobile,
-        setOpenMobile,
-        toggleSidebar,
-      ]
+      [state, open, setOpen, isMobile, openMobile, setOpenMobile, toggleSidebar]
     );
 
     return (
@@ -287,7 +279,8 @@ function SidebarTrigger({
   onClick,
   ...props
 }: React.ComponentProps<typeof Button>) {
-  const { toggleSidebar, open } = useSidebar();
+  const { toggleSidebar, open, openMobile, isMobile } = useSidebar();
+  const isOpen = isMobile ? openMobile : open;
 
   return (
     <Button
@@ -303,7 +296,7 @@ function SidebarTrigger({
       {...props}
     >
       {/* <PanelLeftIcon /> */}
-      {open ? <PanelLeftClose /> : <PanelLeft />}
+      {isOpen ? <PanelLeftClose /> : <PanelLeft />}
       <span className="sr-only">Toggle Sidebar</span>
     </Button>
   );

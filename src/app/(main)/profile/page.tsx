@@ -281,33 +281,35 @@ export default function ProfileSettings() {
   }
 
   return (
-    <div className="min-h-screen bg-black p-8 text-white">
+    <div className="min-h-screen bg-black p-4 sm:p-6 md:p-8 text-white">
       <div className="mx-auto max-w-4xl">
         {/* Account Information */}
-        <section className="mb-8">
-          <h3 className="mb-6 border-b border-gray-800 pb-2 text-lg font-semibold">
+        <section className="mb-6 sm:mb-8">
+          <h3 className="mb-4 sm:mb-6 border-b border-gray-800 pb-2 text-base sm:text-lg font-semibold">
             Account Information
           </h3>
 
-          <div className="mb-8 flex items-center gap-4 border-b border-gray-800 pb-8">
+          <div className="mb-6 sm:mb-8 flex items-center gap-3 sm:gap-4 border-b border-gray-800 pb-6 sm:pb-8">
             <div className="relative">
-              <Avatar className="h-16 w-16">
+              <Avatar className="h-12 w-12 sm:h-16 sm:w-16">
                 <AvatarImage
                   src={user?.picture}
                   alt={user?.name || "User avatar"}
                 />
                 <AvatarFallback className="bg-gray-700">
-                  <BookOpen className="h-8 w-8 text-gray-300" />
+                  <BookOpen className="h-6 w-6 sm:h-8 sm:w-8 text-gray-300" />
                 </AvatarFallback>
               </Avatar>
-              <div className="absolute -bottom-1 -right-1 flex h-6 w-6 items-center justify-center rounded-full bg-blue-500 text-xs">
+              <div className="absolute -bottom-1 -right-1 flex h-5 w-5 sm:h-6 sm:w-6 items-center justify-center rounded-full bg-blue-500 text-xs">
                 ✓
               </div>
             </div>
-            <h2 className="text-xl font-semibold">{user?.name || "User"}</h2>
+            <h2 className="text-lg sm:text-xl font-semibold">
+              {user?.name || "User"}
+            </h2>
           </div>
 
-          <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+          <div className="grid grid-cols-1 gap-4 sm:gap-6 md:grid-cols-2">
             {renderEditableField("Email", "email", "email")}
             {renderEditableField("Phone number", "phone", "tel")}
             {renderEditableField("Daily reminder time", "reminderTime", "time")}
@@ -315,8 +317,8 @@ export default function ProfileSettings() {
         </section>
 
         {/* Subscription */}
-        <section className="mb-8">
-          <h3 className="mb-6 border-b border-gray-800 pb-2 text-lg font-semibold">
+        <section className="mb-6 sm:mb-8">
+          <h3 className="mb-4 sm:mb-6 border-b border-gray-800 pb-2 text-base sm:text-lg font-semibold">
             Subscription
           </h3>
 

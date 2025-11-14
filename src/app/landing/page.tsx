@@ -3,6 +3,15 @@ import Image from "next/image";
 import Link from "next/link";
 import { getAccessToken, useUser } from "@auth0/nextjs-auth0";
 import { useEffect, useState } from "react";
+import { Menu } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
 
 const NAV_ITEMS = [
   { label: "Overview", href: "/landing" },
@@ -15,6 +24,7 @@ const NAV_ITEMS = [
 function Header() {
   const { user, isLoading } = useUser();
   const [jwt, setJwt] = useState<string | null>(null);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   useEffect(() => {
     async function fetchToken() {
@@ -31,16 +41,18 @@ function Header() {
   }, [jwt]);
 
   return (
-    <header className="bg-[#0D0D0D] text-white h-24 flex items-center sticky top-0 z-50">
-      <div className="container mx-auto px-6 flex justify-between items-center h-full">
+    <header className="bg-[#0D0D0D] text-white h-16 sm:h-20 md:h-24 flex items-center sticky top-0 z-50">
+      <div className="container mx-auto px-4 sm:px-6 flex justify-between items-center h-full w-full">
         <Image
           src="/icons/rehi.svg"
           alt="REHI Logo"
           width={115}
           height={60}
-          className="h-auto"
+          className="h-8 sm:h-10 md:h-auto w-auto"
         />
-        <nav className="hidden md:flex items-center space-x-8">
+
+        {/* Desktop Navigation */}
+        <nav className="hidden md:flex items-center space-x-6 lg:space-x-8">
           {NAV_ITEMS.map((item) => (
             <Link
               key={item.href}
@@ -79,6 +91,88 @@ function Header() {
             </div>
           )}
         </nav>
+
+        {/* Mobile Navigation */}
+        <div className="md:hidden flex items-center gap-3">
+          {user && (
+            <div className="flex items-center gap-2">
+              <Image
+                src={user.picture || "/default-avatar.png"}
+                alt={user.name || "User Avatar"}
+                width={28}
+                height={28}
+                className="rounded-full"
+              />
+            </div>
+          )}
+          <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
+            <SheetTrigger asChild>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="text-white hover:bg-gray-800"
+              >
+                <Menu className="h-6 w-6" />
+                <span className="sr-only">Open menu</span>
+              </Button>
+            </SheetTrigger>
+            <SheetContent
+              side="right"
+              className="w-[300px] bg-[#0D0D0D] text-white border-gray-800"
+            >
+              <SheetHeader>
+                <SheetTitle className="text-white">Menu</SheetTitle>
+              </SheetHeader>
+              <nav className="flex flex-col gap-4 mt-6">
+                {NAV_ITEMS.map((item) => (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="hover:text-blue-400 transition-colors duration-200 text-base font-medium py-2"
+                  >
+                    {item.label}
+                  </Link>
+                ))}
+                <div className="border-t border-gray-800 pt-4 mt-4">
+                  {isLoading ? (
+                    <p className="text-gray-400">Loading...</p>
+                  ) : user ? (
+                    <div className="flex flex-col gap-3">
+                      <div className="flex items-center gap-3">
+                        <Image
+                          src={user.picture || "/default-avatar.png"}
+                          alt={user.name || "User Avatar"}
+                          width={32}
+                          height={32}
+                          className="rounded-full"
+                        />
+                        <span className="text-sm text-gray-300">
+                          {user.email}
+                        </span>
+                      </div>
+                      <a
+                        href="/auth/logout"
+                        onClick={() => setMobileMenuOpen(false)}
+                        className="hover:text-blue-400 transition-colors duration-200 text-sm font-medium"
+                      >
+                        Log Out
+                      </a>
+                    </div>
+                  ) : (
+                    <Link
+                      href="/auth/login"
+                      onClick={() => setMobileMenuOpen(false)}
+                      className="hover:text-blue-400 transition-colors duration-200 text-sm font-medium"
+                    >
+                      Log In
+                    </Link>
+                  )}
+                </div>
+              </nav>
+            </SheetContent>
+          </Sheet>
+        </div>
       </div>
     </header>
   );
@@ -89,18 +183,18 @@ export default function LandingPage() {
     <main className="min-h-screen bg-[#0b0b0c] text-white">
       <Header />
       {/* Hero */}
-      <section className="container mx-auto px-6 pt-20 pb-16">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
+      <section className="container mx-auto px-4 sm:px-6 pt-12 sm:pt-16 md:pt-20 pb-12 sm:pb-16">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-10 items-center">
           <div>
-            <h1 className="text-4xl md:text-6xl font-extrabold leading-tight">
+            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold leading-tight">
               Read smarter. Remember longer. Rehi your knowledge.
             </h1>
-            <p className="mt-5 text-lg text-neutral-300">
+            <p className="mt-4 sm:mt-5 text-base sm:text-lg text-neutral-300">
               Rehi is an AI-powered knowledge companion that helps you save
               articles, highlight effortlessly, chat with your readings, and
               master what you learn with flashcards.
             </p>
-            <div className="mt-8 flex flex-wrap gap-3">
+            <div className="mt-6 sm:mt-8 flex flex-wrap gap-3">
               <Link
                 href="/guide"
                 className="inline-flex items-center rounded-md bg-blue-600 px-5 py-3 text-sm font-semibold hover:bg-blue-500"
@@ -128,11 +222,11 @@ export default function LandingPage() {
       </section>
 
       {/* Feature grid */}
-      <section className="container mx-auto px-6 py-12">
-        <h2 className="text-2xl md:text-3xl font-bold mb-8">
+      <section className="container mx-auto px-4 sm:px-6 py-8 sm:py-12">
+        <h2 className="text-xl sm:text-2xl md:text-3xl font-bold mb-6 sm:mb-8">
           What Rehi can do
         </h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
           <FeatureCard
             title="Save & Organize Articles"
             desc="Capture articles from the web, tag them, and keep your reading organized across Reading/Later/Archived."
@@ -173,9 +267,11 @@ export default function LandingPage() {
       </section>
 
       {/* How it works */}
-      <section className="container mx-auto px-6 py-12">
-        <h2 className="text-2xl md:text-3xl font-bold mb-6">How it works</h2>
-        <ol className="grid grid-cols-1 md:grid-cols-3 gap-6 list-decimal list-inside text-neutral-300">
+      <section className="container mx-auto px-4 sm:px-6 py-8 sm:py-12">
+        <h2 className="text-xl sm:text-2xl md:text-3xl font-bold mb-4 sm:mb-6">
+          How it works
+        </h2>
+        <ol className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6 list-decimal list-inside text-neutral-300">
           <li className="rounded-lg border border-neutral-800 p-5 bg-neutral-950">
             Save pages to Rehi or import existing reads. Tag and organize them.
           </li>
@@ -190,16 +286,16 @@ export default function LandingPage() {
       </section>
 
       {/* CTA */}
-      <section className="container mx-auto px-6 py-16">
-        <div className="rounded-xl border border-neutral-800 p-8 bg-gradient-to-b from-neutral-900 to-neutral-950 text-center">
-          <h3 className="text-2xl md:text-3xl font-bold">
+      <section className="container mx-auto px-4 sm:px-6 py-12 sm:py-16">
+        <div className="rounded-xl border border-neutral-800 p-6 sm:p-8 bg-gradient-to-b from-neutral-900 to-neutral-950 text-center">
+          <h3 className="text-xl sm:text-2xl md:text-3xl font-bold">
             Ready to Rehi your reading?
           </h3>
-          <p className="mt-2 text-neutral-300">
+          <p className="mt-2 text-sm sm:text-base text-neutral-300">
             Start in minutes. Bring your articles, make highlights, and let AI
             help you retain more.
           </p>
-          <div className="mt-6 flex items-center justify-center gap-3">
+          <div className="mt-4 sm:mt-6 flex flex-col sm:flex-row items-center justify-center gap-3">
             <Link
               href="/guide"
               className="inline-flex items-center rounded-md bg-blue-600 px-5 py-3 text-sm font-semibold hover:bg-blue-500"
