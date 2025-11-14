@@ -68,37 +68,56 @@ export function useTextSelection() {
     []
   );
 
-  const handleMouseUp = useCallback(() => {
-    const sel = document.getSelection();
-    if (!sel || sel.isCollapsed || sel.rangeCount <= 0) {
-      setSelection(null);
-      setRangeRect(null);
-      setIsReverseSelected(false);
-      return;
-    }
-    const articleContent = document.getElementById("article-content-id");
-    if (!articleContent || !isSelectionInContainer(sel, articleContent)) {
-      setSelection(null);
-      setRangeRect(null);
-      setIsReverseSelected(false);
-      return;
-    }
-    const selectionData = extractSelectionData(sel);
-    setSelection(selectionData);
+  const handleSelection = useCallback(() => {
+    // Small delay to ensure selection is fully established, especially on mobile
+    // On mobile, native context menu might appear first, so we need a longer delay
+    const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+    const delay = isMobile ? 300 : 100;
 
-    const range = sel.getRangeAt(0);
-    const rect = range.getBoundingClientRect();
-    setRangeRect(rect);
-    const reverse =
-      range.startContainer === sel.focusNode &&
-      range.endOffset === sel.anchorOffset;
-    setIsReverseSelected(reverse);
+    setTimeout(() => {
+      const sel = document.getSelection();
+      if (!sel || sel.isCollapsed || sel.rangeCount <= 0) {
+        setSelection(null);
+        setRangeRect(null);
+        setIsReverseSelected(false);
+        return;
+      }
+      const articleContent = document.getElementById("article-content-id");
+      if (!articleContent || !isSelectionInContainer(sel, articleContent)) {
+        setSelection(null);
+        setRangeRect(null);
+        setIsReverseSelected(false);
+        return;
+      }
+      const selectionData = extractSelectionData(sel);
+      if (!selectionData) {
+        setSelection(null);
+        setRangeRect(null);
+        setIsReverseSelected(false);
+        return;
+      }
+      setSelection(selectionData);
+
+      const range = sel.getRangeAt(0);
+      const rect = range.getBoundingClientRect();
+      setRangeRect(rect);
+      const reverse =
+        range.startContainer === sel.focusNode &&
+        range.endOffset === sel.anchorOffset;
+      setIsReverseSelected(reverse);
+    }, delay);
   }, [extractSelectionData, isSelectionInContainer]);
 
   useEffect(() => {
-    document.addEventListener("mouseup", handleMouseUp);
-    return () => document.removeEventListener("mouseup", handleMouseUp);
-  }, [handleMouseUp]);
+    // Support both mouse and touch events
+    document.addEventListener("mouseup", handleSelection);
+    document.addEventListener("touchend", handleSelection);
+
+    return () => {
+      document.removeEventListener("mouseup", handleSelection);
+      document.removeEventListener("touchend", handleSelection);
+    };
+  }, [handleSelection]);
 
   const clearSelection = useCallback(() => {
     setSelection(null);

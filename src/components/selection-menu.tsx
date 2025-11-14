@@ -49,9 +49,41 @@ export function SelectionMenu({
   const [selectedColor, setSelectedColor] = useState(HIGHLIGHT_COLORS[0].value);
   const offset = 8;
   const vertical = 0;
-  const left =
-    (isReverse ? rect.left - offset : rect.right + offset) + window.scrollX;
-  const top = rect.top + window.scrollY - vertical;
+
+  // Calculate position with mobile-friendly adjustments
+  const calculatePosition = () => {
+    const viewportWidth = window.innerWidth;
+    const viewportHeight = window.innerHeight;
+    const menuWidth = 280; // Approximate menu width
+    const menuHeight = 40; // Approximate menu height
+
+    let left =
+      (isReverse ? rect.left - offset : rect.right + offset) + window.scrollX;
+    let top = rect.top + window.scrollY - vertical;
+
+    // On mobile, prefer showing menu above selection to avoid keyboard issues
+    const isMobile = viewportWidth < 768;
+    if (isMobile) {
+      // Show menu above selection if there's not enough space below
+      if (top + menuHeight > viewportHeight - 100) {
+        top = rect.top + window.scrollY - menuHeight - 10;
+      }
+      // Center horizontally on mobile for better UX
+      left = Math.max(10, Math.min(left, viewportWidth - menuWidth - 10));
+    } else {
+      // Desktop: keep original logic but ensure it's within viewport
+      if (left + menuWidth > viewportWidth) {
+        left = viewportWidth - menuWidth - 10;
+      }
+      if (left < 0) {
+        left = 10;
+      }
+    }
+
+    return { left, top };
+  };
+
+  const { left, top } = calculatePosition();
 
   return (
     <div
@@ -62,15 +94,20 @@ export function SelectionMenu({
         zIndex: 50,
       }}
       onMouseDown={(e) => e.preventDefault()}
-      className="flex items-center gap-2 bg-neutral-800 border border-neutral-700 rounded-md px-2 py-1 shadow-md"
+      onTouchStart={(e) => e.preventDefault()}
+      className="flex items-center gap-1 sm:gap-2 bg-neutral-800 border border-neutral-700 rounded-md px-1.5 sm:px-2 py-1 shadow-md"
     >
       {/* Color picker */}
-      <div className="flex items-center gap-1">
+      <div className="flex items-center gap-0.5 sm:gap-1">
         {HIGHLIGHT_COLORS.map((color) => (
           <button
             key={color.value}
             onClick={() => setSelectedColor(color.value)}
-            className={`w-5 h-5 rounded-full border-2 transition-all hover:scale-110 ${
+            onTouchEnd={(e) => {
+              e.preventDefault();
+              setSelectedColor(color.value);
+            }}
+            className={`w-4 h-4 sm:w-5 sm:h-5 rounded-full border-2 transition-all active:scale-110 hover:scale-110 ${
               selectedColor === color.value
                 ? "border-white scale-110"
                 : "border-neutral-600 hover:border-neutral-400"
@@ -85,9 +122,13 @@ export function SelectionMenu({
       <Button
         size="sm"
         onClick={() => onHighlight(selectedColor)}
-        className="h-7 px-2"
+        onTouchEnd={(e) => {
+          e.preventDefault();
+          onHighlight(selectedColor);
+        }}
+        className="h-6 sm:h-7 px-1.5 sm:px-2 text-xs sm:text-sm"
       >
-        <Highlighter className="w-4 h-4" />
+        <Highlighter className="w-3 h-3 sm:w-4 sm:h-4" />
       </Button>
 
       {/* Ask Rehi button */}
@@ -95,9 +136,13 @@ export function SelectionMenu({
         <Button
           size="sm"
           onClick={onAskRehi}
-          className="h-7 px-2 bg-blue-600 hover:bg-blue-700"
+          onTouchEnd={(e) => {
+            e.preventDefault();
+            onAskRehi();
+          }}
+          className="h-6 sm:h-7 px-1.5 sm:px-2 bg-blue-600 hover:bg-blue-700 text-xs sm:text-sm"
         >
-          <MessageCircle className="w-4 h-4" />
+          <MessageCircle className="w-3 h-3 sm:w-4 sm:h-4" />
         </Button>
       )}
     </div>
