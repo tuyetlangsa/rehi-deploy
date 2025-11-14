@@ -136,17 +136,17 @@ const ArticlePage = () => {
   }
 
   return (
-    <article className="max-w-4xl mx-auto px-6 py-12 ">
+    <article className="max-w-4xl mx-auto px-3 sm:px-6 py-6 sm:py-12">
       {/* Back to Articles Button */}
       <SidebarInset className="w-full">
         <Link
           href="/articles"
-          className="inline-flex items-center gap-2 text-gray-400 hover:text-white hover:bg-gray-800 rounded-md px-3 py-2 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="inline-flex items-center gap-2 text-gray-400 hover:text-white hover:bg-gray-800 rounded-md px-2 sm:px-3 py-1.5 sm:py-2 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm sm:text-base"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            width="20"
-            height="20"
+            width="18"
+            height="18"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
@@ -159,25 +159,26 @@ const ArticlePage = () => {
               d="M15 19l-7-7 7-7"
             />
           </svg>
-          <span>Back to Articles</span>
+          <span className="hidden sm:inline">Back to Articles</span>
+          <span className="sm:hidden">Back</span>
         </Link>
         {/* Article Header */}
-        <header className="mb-12 pb-8 border-b border-gray-800">
-          <h1 className="text-5xl font-bold text-white mb-6 leading-tight">
+        <header className="mb-6 sm:mb-12 pb-4 sm:pb-8 border-b border-gray-800">
+          <h1 className="text-2xl sm:text-4xl md:text-5xl font-bold text-white mb-4 sm:mb-6 leading-tight">
             {article.title}
           </h1>
-          <div className="flex flex-wrap items-center justify-between gap-6 text-gray-400 text-sm">
-            <div className="flex flex-wrap items-center gap-6">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 sm:gap-6 text-gray-400 text-xs sm:text-sm">
+            <div className="flex flex-wrap items-center gap-3 sm:gap-6">
               {article.author && (
                 <div className="flex items-center gap-2">
-                  <User className="w-4 h-4" />
+                  <User className="w-3 h-3 sm:w-4 sm:h-4" />
                   <span>{article.author}</span>
                 </div>
               )}
 
               {article.createAt && (
                 <div className="flex items-center gap-2">
-                  <Calendar className="w-4 h-4" />
+                  <Calendar className="w-3 h-3 sm:w-4 sm:h-4" />
                   <span>
                     {new Date(article.createAt).toLocaleDateString("en-US", {
                       year: "numeric",
@@ -190,7 +191,7 @@ const ArticlePage = () => {
 
               {article.timeToRead && (
                 <div className="flex items-center gap-2">
-                  <Clock className="w-4 h-4" />
+                  <Clock className="w-3 h-3 sm:w-4 sm:h-4" />
                   <span>{article.timeToRead}</span>
                 </div>
               )}
@@ -211,7 +212,7 @@ const ArticlePage = () => {
         {/* Article Content */}
         <div
           id="article-content"
-          className="prose prose-invert prose-lg max-w-none"
+          className="prose prose-invert prose-sm sm:prose-base md:prose-lg max-w-none"
         >
           {article.cleanedHtml && (
             <div

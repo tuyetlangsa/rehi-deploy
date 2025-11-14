@@ -249,23 +249,27 @@ const ArticleItemComponent = ({
   return (
     <Link
       href={`/articles/${id}`}
-      className="relative flex gap-2 border p-4 mb-6transition w-full border-none hover:bg-[#28313b]"
+      className="relative flex flex-col sm:flex-row gap-3 sm:gap-2 border p-3 sm:p-4 mb-4 sm:mb-6 transition w-full border-none hover:bg-[#28313b]"
     >
-      <div className="flex-shrink-0">
+      <div className="flex-shrink-0 flex sm:block">
         <Image
           loading="lazy"
           src={imageSrc}
           alt={title}
           width={200}
           height={100}
-          className="object-cover mx-6 rounded-lg w-[100px] h-[100px]"
+          className="object-cover mx-auto sm:mx-6 rounded-lg w-full sm:w-[100px] h-[150px] sm:h-[100px] max-w-[200px] sm:max-w-none"
         />
       </div>
 
-      <div className="flex flex-col flex-1 justify-between text-[#FFFFFF80]">
+      <div className="flex flex-col flex-1 justify-between text-[#FFFFFF80] min-w-0">
         <div>
-          <h3 className="text-sm font-semibold text-white">{title}</h3>
-          <p className="text-sm mt-1 line-clamp-3">{summary}</p>
+          <h3 className="text-sm sm:text-base font-semibold text-white line-clamp-2">
+            {title}
+          </h3>
+          <p className="text-xs sm:text-sm mt-1 line-clamp-2 sm:line-clamp-3">
+            {summary}
+          </p>
           {tags && tags.length > 0 && (
             <div className="flex flex-wrap gap-1 mt-2">
               {tags.map((tag) => (
@@ -279,24 +283,24 @@ const ArticleItemComponent = ({
             </div>
           )}
         </div>
-        <div className="flex">
-          <span className="text-sm line-clamp-1">{url}</span>
+        <div className="flex flex-wrap items-center gap-x-1 text-xs sm:text-sm mt-2">
+          <span className="line-clamp-1 truncate max-w-[150px] sm:max-w-none">
+            {url}
+          </span>
           {url && language && <span className="mx-1">•</span>}
-          <span className="text-sm line-clamp-1">{language}</span>
+          <span className="line-clamp-1">{language}</span>
           {language && timeToRead && <span className="mx-1">•</span>}
-          <span className="text-sm line-clamp-1">{timeToRead}</span>
+          <span className="line-clamp-1">{timeToRead}</span>
           {isPublic && (
             <>
               <span className="mx-1">•</span>
-              <span className="text-sm line-clamp-1 text-green-400">
-                Public
-              </span>
+              <span className="line-clamp-1 text-green-400">Public</span>
             </>
           )}
         </div>
       </div>
-      <div className="ml-auto flex items-start gap-3">
-        <div className="text-[#FFFFFF80] text-sm line-clamp-1 mt-1">
+      <div className="ml-auto flex items-start gap-2 sm:gap-3 flex-shrink-0">
+        <div className="text-[#FFFFFF80] text-xs sm:text-sm line-clamp-1 mt-1 hidden sm:block">
           <div>{formattedTime}</div>
         </div>
         <div className="relative">
@@ -576,15 +580,15 @@ function Page() {
     <>
       {isCommandPaletteOpen && (
         <div
-          className="fixed inset-0 backdrop-blur-[2px] flex items-start justify-center z-50 pt-[33vh]"
+          className="fixed inset-0 backdrop-blur-[2px] flex items-start justify-center z-50 pt-[20vh] sm:pt-[33vh] px-4"
           onClick={() => setIsCommandPaletteOpen(false)}
         >
           <div
-            className="bg-card border border-border rounded-lg shadow-xl w-full max-w-2xl m-4"
+            className="bg-card border border-border rounded-lg shadow-xl w-full max-w-2xl"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="p-4 border-b border-border">
-              <h2 className="text-lg font-semibold text-foreground mb-2">
+            <div className="p-4 sm:p-6 border-b border-border">
+              <h2 className="text-base sm:text-lg font-semibold text-foreground mb-2">
                 Search Articles
               </h2>
               <input
@@ -603,13 +607,13 @@ function Page() {
                   }
                 }}
                 placeholder="Try: tag:ai, author:john, neural networks..."
-                className="w-full px-3 py-2 bg-background border border-border rounded-md text-foreground"
+                className="w-full px-3 py-2 text-sm sm:text-base bg-background border border-border rounded-md text-foreground"
                 autoFocus
               />
               <p className="text-xs text-muted-foreground mt-2">
                 Examples: <code className="bg-muted px-1 rounded">tag:ai</code>,{" "}
                 <code className="bg-muted px-1 rounded">author:john</code>,{" "}
-                <code className="bg-muted px-1 rounded">
+                <code className="bg-muted px-1 rounded hidden sm:inline">
                   tag:ai and author:john
                 </code>
               </p>
@@ -618,14 +622,14 @@ function Page() {
         </div>
       )}
 
-      <section className="mx-auto px-4 py-8">
+      <section className="mx-auto px-3 sm:px-4 py-4 sm:py-8 max-w-7xl">
         {!articles || articles.length === 0 ? (
-          <div className="flex items-center justify-center py-20">
-            <div className="text-center">
-              <h1 className="text-4xl font-bold text-gray-200 mb-4">
+          <div className="flex items-center justify-center py-12 sm:py-20">
+            <div className="text-center px-4">
+              <h1 className="text-2xl sm:text-4xl font-bold text-gray-200 mb-4">
                 No Articles Found
               </h1>
-              <p className="text-gray-400">
+              <p className="text-sm sm:text-base text-gray-400">
                 It seems there are no articles available at the moment.
               </p>
             </div>

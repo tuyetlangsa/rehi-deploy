@@ -470,10 +470,10 @@ function ChatBot() {
       {/* Main Content Area */}
       <div className="flex-1 flex flex-col h-screen overflow-hidden">
         {/* Header Bar */}
-        <header className="flex-shrink-0 border-b border-border bg-card/80 backdrop-blur-sm px-6 py-4">
+        <header className="flex-shrink-0 border-b border-border bg-card/80 backdrop-blur-sm px-3 sm:px-6 py-3 sm:py-4">
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-full overflow-hidden border border-border">
+            <div className="flex items-center gap-2 sm:gap-3 min-w-0 flex-1">
+              <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full overflow-hidden border border-border flex-shrink-0">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src="/robo%20doggo.png"
@@ -481,19 +481,21 @@ function ChatBot() {
                   className="w-full h-full object-cover"
                 />
               </div>
-              <div>
-                <h1 className="text-lg font-semibold">Rehi chat</h1>
-                <p className="text-sm text-muted-foreground">
+              <div className="min-w-0 flex-1">
+                <h1 className="text-base sm:text-lg font-semibold truncate">
+                  Rehi chat
+                </h1>
+                <p className="text-xs sm:text-sm text-muted-foreground truncate">
                   Find everything you read here.
                 </p>
               </div>
             </div>
             <button
               onClick={clearChat}
-              className="p-2 rounded-xl bg-muted text-muted-foreground hover:bg-muted/80 transition-colors"
+              className="p-1.5 sm:p-2 rounded-xl bg-muted text-muted-foreground hover:bg-muted/80 transition-colors flex-shrink-0 ml-2"
               aria-label="Clear chat"
             >
-              <Trash2 size={18} />
+              <Trash2 size={16} className="sm:w-[18px] sm:h-[18px]" />
             </button>
           </div>
         </header>
@@ -503,7 +505,7 @@ function ChatBot() {
           {/* Left Column - Chat Messages */}
           <div className="flex flex-col overflow-hidden">
             {/* Messages Container - Scrollable */}
-            <div className="flex-1 overflow-y-auto px-3 py-6">
+            <div className="flex-1 overflow-y-auto px-2 sm:px-3 py-4 sm:py-6">
               <div className="w-full space-y-2">
                 {messages.map((msg) => (
                   <MessageBubble key={msg.id} message={msg} isDark={isDark} />
@@ -514,7 +516,7 @@ function ChatBot() {
             </div>
 
             {/* Input Area - Fixed at bottom of left column */}
-            <div className="flex-shrink-0 border-t border-border bg-card/80 backdrop-blur-sm px-3 py-4">
+            <div className="flex-shrink-0 border-t border-border bg-card/80 backdrop-blur-sm px-2 sm:px-3 py-3 sm:py-4">
               <div className="w-full">
                 <div className="relative">
                   <textarea
@@ -523,24 +525,24 @@ function ChatBot() {
                     value={input}
                     onChange={(e) => setInput(e.target.value)}
                     onKeyDown={handleKeyDown}
-                    placeholder="Type your message here... (Press Enter to send, Shift+Enter for new line)"
+                    placeholder="Type your message... (Enter to send)"
                     disabled={isLoading}
-                    className="w-full resize-none py-4 px-6 pr-16 rounded-2xl bg-muted text-foreground border border-border placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary disabled:opacity-50 shadow-sm scrollbar-hide"
+                    className="w-full resize-none py-3 sm:py-4 px-4 sm:px-6 pr-12 sm:pr-16 rounded-xl sm:rounded-2xl bg-muted text-foreground border border-border placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary disabled:opacity-50 shadow-sm scrollbar-hide text-sm sm:text-base"
                     style={{ maxHeight: "120px" }}
                   />
                   <button
                     onClick={sendMessage}
                     disabled={!input.trim() || isLoading}
-                    className="absolute right-3 bottom-3 w-10 h-10 bg-primary text-primary-foreground rounded-xl hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center justify-center shadow-lg active:scale-95 focus:outline-none focus:ring-2 focus:ring-primary/70"
+                    className="absolute right-2 sm:right-3 bottom-2 sm:bottom-3 w-8 h-8 sm:w-10 sm:h-10 bg-primary text-primary-foreground rounded-lg sm:rounded-xl hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center justify-center shadow-lg active:scale-95 focus:outline-none focus:ring-2 focus:ring-primary/70"
                   >
-                    <Send size={18} />
+                    <Send size={16} className="sm:w-[18px] sm:h-[18px]" />
                   </button>
                 </div>
-                <div className="flex items-center justify-between mt-3 px-2 text-muted-foreground">
+                <div className="flex items-center justify-between mt-2 sm:mt-3 px-1 sm:px-2 text-muted-foreground">
                   <p className="text-xs">
                     {messages.length} message{messages.length !== 1 ? "s" : ""}
                   </p>
-                  <p className="text-xs">
+                  <p className="text-xs hidden sm:inline">
                     Press{" "}
                     <kbd className="px-1.5 py-0.5 rounded text-xs bg-muted text-muted-foreground">
                       Enter
