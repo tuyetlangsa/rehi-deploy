@@ -108,7 +108,7 @@ export default function ProfileSettings() {
   const handleCancelSubscription = useCallback(async () => {
     try {
       const response = await cancelSubscription.mutateAsync({
-        provider: "paypal",
+        provider: subscription?.provider || "payos",
       });
 
       if (!response?.success) {

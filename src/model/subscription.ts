@@ -1,15 +1,16 @@
 export type SubscriptionPlan = {
-    id: string;
-    name: string;
-    price: number;
-    description: string;
-    status: SubscriptionStatus;
-    currentPeriodEnd: Date;
-}
+  id: string;
+  name: string;
+  price: number;
+  description: string;
+  status: SubscriptionStatus;
+  currentPeriodEnd: Date;
+  provider?: string;
+};
 export enum SubscriptionStatus {
-    Pending,
-    Active,
-    Expired,
-    Cancelled,
-    Suspended
+  Pending,
+  Active,
+  Expired,
+  Cancelled,
+  Suspended,
 }

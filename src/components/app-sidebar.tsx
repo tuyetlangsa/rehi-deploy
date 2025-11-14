@@ -51,9 +51,11 @@ import {
 import { Button } from "./ui/button";
 import { useUser } from "@auth0/nextjs-auth0";
 import { Spinner } from "./ui/shadcn-io/spinner";
-import { ADMIN } from "@/constants/data";
 
 const homeItem = { title: "Home", url: "/", icon: Home };
+const ADMIN_EMAILS = (process.env.NEXT_PUBLIC_ADMIN_EMAILS || "")
+  .split(",")
+  .map((email) => email.trim());
 
 const mainItems = [
   { title: "Daily review", url: "/review", icon: Calendar },
@@ -196,7 +198,7 @@ export function AppSidebar() {
             side="top"
             className="w-64 bg-[#2d2d2d] text-white rounded-lg shadow-lg"
           >
-            {ADMIN.includes(user?.email || "") && (
+            {ADMIN_EMAILS.includes(user?.email || "") && (
               <DropdownMenuItem
                 asChild
                 className="flex items-center gap-3 px-4 py-3 cursor-pointer hover:bg-gray-800"

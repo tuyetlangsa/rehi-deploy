@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useEffect } from "react";
 import {
   TrendingUp,
   TrendingDown,
@@ -29,6 +29,9 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { useUser } from "@auth0/nextjs-auth0";
+import { useRouter } from "next/navigation";
+import { useGetDashboardData } from "@/hooks/use-dashboard";
 
 // Type Definitions
 interface RevenueDataPoint {
@@ -43,11 +46,6 @@ interface PlanDistributionItem {
   [key: string]: string | number;
 }
 
-interface Subscription {
-  email: string;
-  amount: string;
-}
-
 interface StatCardProps {
   title: string;
   value: string;
@@ -58,27 +56,35 @@ interface StatCardProps {
 }
 
 // Constants
-const REVENUE_DATA: RevenueDataPoint[] = [{ month: "Nov", value: 0 }];
+const ADMIN_EMAILS = (process.env.NEXT_PUBLIC_ADMIN_EMAILS || "")
+  .split(",")
+  .map((email) => email.trim());
+
+const REVENUE_DATA: RevenueDataPoint[] = [
+  { month: "Jan", value: 95 },
+  { month: "Feb", value: 135 },
+  { month: "Mar", value: 165 },
+  { month: "Apr", value: 155 },
+  { month: "May", value: 215 },
+  { month: "Jun", value: 165 },
+  { month: "Jul", value: 145 },
+  { month: "Aug", value: 185 },
+  { month: "Sep", value: 205 },
+  { month: "Oct", value: 175 },
+  { month: "Nov", value: 165 },
+  { month: "Dec", value: 185 },
+];
 
 const PLAN_DATA: PlanDistributionItem[] = [
-  { name: "% Free", value: 100, color: "#E5E7EB" },
+  { name: "% Premium", value: 25, color: "#FCD34D" },
+  { name: "% Premium Individual", value: 20, color: "#FB923C" },
+  { name: "% Group Plan", value: 30, color: "#60A5FA" },
+  { name: "% Business Plan", value: 25, color: "#22D3EE" },
 ];
 
 const BILLING_DATA: PlanDistributionItem[] = [
-  { name: "% Monthly", value: 100, color: "#E5E7EB" },
-  { name: "% Yearly", value: 0, color: "#14B8A6" },
-];
-
-const SUBSCRIPTIONS: Subscription[] = [
-  { email: "lelambanksio@gmail.com", amount: "Free" },
-  { email: "phaannisa@gmail.com", amount: "Free" },
-  { email: "kamyskiwet@gmail.com", amount: "Free" },
-  { email: "hongduunghoee@gmail.com", amount: "Free" },
-  { email: "rawnybong@gmail.com", amount: "Free" },
-  { email: "phudanehah@gmail.com", amount: "Free" },
-  { email: "glabovknayitligusah@gmail.com", amount: "Free" },
-  { email: "laolithoongolumat@gmail.com", amount: "Free" },
-  { email: "longheo242@gmail.com", amount: "Free" },
+  { name: "% Monthly", value: 45, color: "#E5E7EB" },
+  { name: "% Yearly", value: 55, color: "#14B8A6" },
 ];
 
 // Components
@@ -153,7 +159,7 @@ const CustomTooltip: React.FC<CustomTooltipProps> = ({
     return (
       <div className="bg-blue-500 text-white p-2 rounded-lg shadow-lg">
         <p className="text-sm font-semibold">{label}</p>
-        <p className="text-sm">${payload[0].value}</p>
+        <p className="text-sm">${payload[0].value}M</p>
       </div>
     );
   }
@@ -163,6 +169,50 @@ const CustomTooltip: React.FC<CustomTooltipProps> = ({
 // Main Dashboard Component
 const Dashboard: React.FC = () => {
   const [selectedYear, setSelectedYear] = React.useState<string>("2025");
+  const { user, isLoading } = useUser();
+  const router = useRouter();
+  const {
+    mutate: fetchDashboardData,
+    isPending,
+    data: dashboardData,
+  } = useGetDashboardData();
+
+  useEffect(() => {
+    console.log("User:", user);
+    console.log("Admin Emails:", ADMIN_EMAILS);
+    if (!isLoading && (!user || !ADMIN_EMAILS.includes(user.email || ""))) {
+      router.push("/");
+    } else if (!isLoading && user && ADMIN_EMAILS.includes(user.email || "")) {
+      fetchDashboardData();
+    }
+  }, [user, isLoading, router, fetchDashboardData]);
+
+  if (isLoading || isPending) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        Loading...
+      </div>
+    );
+  }
+
+  if (!user || !ADMIN_EMAILS.includes(user.email || "")) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        Access Denied
+      </div>
+    );
+  }
+
+  // Extract data from API response
+  const dashboardInfo = dashboardData?.dashboard;
+  const totalUsers = dashboardInfo?.totalUser?.value || 0;
+  const newUsers = dashboardInfo?.newUser?.value || 0;
+  const newUserChange = dashboardInfo?.newUser?.monthOverMonthChange || 0;
+  const totalRevenue = dashboardInfo?.totalRevenue?.value || 0;
+  const revenueChange = dashboardInfo?.revenueChange?.value || 0;
+  const revenueChangeFormatted =
+    dashboardInfo?.totalRevenue?.monthOverMonthChange || 0;
+  const subscriptions = dashboardInfo?.recentSubscriptions || [];
 
   return (
     <div className="min-h-screen bg-background">
@@ -178,31 +228,31 @@ const Dashboard: React.FC = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
           <StatCard
             title="Total Users"
-            value="10"
+            value={totalUsers.toLocaleString()}
             icon={Users}
             color="bg-blue-200"
           />
           <StatCard
             title="New Users (This Month)"
-            value="10"
+            value={newUsers.toLocaleString()}
             icon={Users}
-            trend="up"
-            trendValue="100%"
+            trend={newUserChange >= 0 ? "up" : "down"}
+            trendValue={`${newUserChange}%`}
             color="bg-green-200"
           />
           <StatCard
             title="Total Revenue"
-            value="$0"
+            value={`$${(totalRevenue / 1000000).toFixed(2)}M`}
             icon={DollarSign}
             color="bg-blue-200"
           />
           <StatCard
             title="Revenue Change (vs. Last Month)"
-            value="$0"
-            icon={TrendingUp}
-            trend="up"
-            trendValue="0"
-            color="bg-green-200"
+            value={`$${revenueChange}`}
+            icon={TrendingDown}
+            trend={revenueChangeFormatted >= 0 ? "up" : "down"}
+            trendValue={`${revenueChangeFormatted}%`}
+            color="bg-red-200"
           />
         </div>
 
@@ -274,19 +324,25 @@ const Dashboard: React.FC = () => {
             <CardContent>
               <ScrollArea className="h-80">
                 <div className="space-y-3 pr-4">
-                  {SUBSCRIPTIONS.map((sub, idx) => (
-                    <div
-                      key={`${sub.email}-${idx}`}
-                      className="flex items-center justify-between py-2 border-b last:border-0"
-                    >
-                      <span className="text-sm text-muted-foreground truncate flex-1">
-                        {sub.email}
-                      </span>
-                      <span className="text-sm font-semibold ml-2">
-                        {sub.amount}
-                      </span>
+                  {subscriptions.length > 0 ? (
+                    subscriptions.map((sub, idx) => (
+                      <div
+                        key={`${sub.email}-${idx}`}
+                        className="flex items-center justify-between py-2 border-b last:border-0"
+                      >
+                        <span className="text-sm text-muted-foreground truncate flex-1">
+                          {sub.email}
+                        </span>
+                        <span className="text-sm font-semibold ml-2">
+                          ${sub.value}
+                        </span>
+                      </div>
+                    ))
+                  ) : (
+                    <div className="text-sm text-muted-foreground text-center py-4">
+                      No recent subscriptions
                     </div>
-                  ))}
+                  )}
                 </div>
               </ScrollArea>
             </CardContent>
