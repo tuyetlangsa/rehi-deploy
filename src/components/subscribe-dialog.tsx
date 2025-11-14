@@ -99,7 +99,7 @@ export function SubscribeDialog({
         <DialogHeader>
           <DialogTitle className="text-xl">Choose Payment Method</DialogTitle>
           <DialogDescription>
-            Select your preferred payment provider to complete your subscription
+            Select your preferred payment provider to finish your subscription
           </DialogDescription>
         </DialogHeader>
 
