@@ -4,6 +4,35 @@
 /* Article Content Styles */
 .article-content {
   @apply text-gray-300 leading-relaxed;
+  /* Enable text selection on mobile */
+  -webkit-user-select: text;
+  -moz-user-select: text;
+  -ms-user-select: text;
+  user-select: text;
+  /* Allow touch actions for text selection */
+  touch-action: pan-y pinch-zoom;
+  /* Prevent text selection issues on mobile */
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Ensure all text elements inside article content are selectable */
+.article-content * {
+  -webkit-user-select: text;
+  -moz-user-select: text;
+  -ms-user-select: text;
+  user-select: text;
+}
+
+/* Exception for buttons and interactive elements */
+.article-content button,
+.article-content a,
+.article-content input,
+.article-content textarea,
+.article-content select {
+  -webkit-user-select: auto;
+  -moz-user-select: auto;
+  -ms-user-select: auto;
+  user-select: auto;
 }
 
 .article-content h1 {

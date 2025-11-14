@@ -96,6 +96,26 @@ const ArticlePage = () => {
     );
   }, [highlights, article?.cleanedHtml, readingStyles]);
 
+  // Prevent default context menu on mobile to allow custom highlight menu
+  useEffect(() => {
+    if (typeof document === "undefined") return;
+    const container = document.getElementById("article-content-id");
+    if (!container) return;
+
+    const handleContextMenu = (e: Event) => {
+      // Only prevent if there's a text selection
+      const selection = document.getSelection();
+      if (selection && !selection.isCollapsed && selection.rangeCount > 0) {
+        e.preventDefault();
+      }
+    };
+
+    container.addEventListener("contextmenu", handleContextMenu);
+    return () => {
+      container.removeEventListener("contextmenu", handleContextMenu);
+    };
+  }, [article?.cleanedHtml]);
+
   // Scroll to highlight when hash is present in URL
   useEffect(() => {
     if (typeof window === "undefined") return;
