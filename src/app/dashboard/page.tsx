@@ -40,10 +40,9 @@ interface RevenueDataPoint {
 }
 
 interface PlanDistributionItem {
-  name: string;
+  name?: string | number;
   value: number;
   color: string;
-  [key: string]: string | number;
 }
 
 interface StatCardProps {
@@ -60,33 +59,6 @@ const ADMIN_EMAILS = (process.env.NEXT_PUBLIC_ADMIN_EMAILS || "")
   .split(",")
   .map((email) => email.trim());
 
-const REVENUE_DATA: RevenueDataPoint[] = [
-  { month: "Jan", value: 95 },
-  { month: "Feb", value: 135 },
-  { month: "Mar", value: 165 },
-  { month: "Apr", value: 155 },
-  { month: "May", value: 215 },
-  { month: "Jun", value: 165 },
-  { month: "Jul", value: 145 },
-  { month: "Aug", value: 185 },
-  { month: "Sep", value: 205 },
-  { month: "Oct", value: 175 },
-  { month: "Nov", value: 165 },
-  { month: "Dec", value: 185 },
-];
-
-const PLAN_DATA: PlanDistributionItem[] = [
-  { name: "% Premium", value: 25, color: "#FCD34D" },
-  { name: "% Premium Individual", value: 20, color: "#FB923C" },
-  { name: "% Group Plan", value: 30, color: "#60A5FA" },
-  { name: "% Business Plan", value: 25, color: "#22D3EE" },
-];
-
-const BILLING_DATA: PlanDistributionItem[] = [
-  { name: "% Monthly", value: 45, color: "#E5E7EB" },
-  { name: "% Yearly", value: 55, color: "#14B8A6" },
-];
-
 // Components
 const StatCard: React.FC<StatCardProps> = ({
   title,
@@ -97,25 +69,25 @@ const StatCard: React.FC<StatCardProps> = ({
   color,
 }) => (
   <Card>
-    <CardContent className="pt-4 sm:pt-6">
+    <CardContent className="pt-6">
       <div className="flex items-center justify-between mb-2">
-        <p className="text-xs sm:text-sm text-muted-foreground">{title}</p>
-        <div className={`p-1.5 sm:p-2 rounded-lg ${color}`}>
-          <Icon className="w-4 h-4 sm:w-5 sm:h-5" color="black" />
+        <p className="text-sm text-muted-foreground">{title}</p>
+        <div className={`p-2 rounded-lg ${color}`}>
+          <Icon className="w-5 h-5" color="black" />
         </div>
       </div>
       <div className="flex items-center gap-2">
-        <p className="text-xl sm:text-2xl md:text-3xl font-bold">{value}</p>
+        <p className="text-3xl font-bold">{value}</p>
         {trend && trendValue && (
           <span
-            className={`text-xs sm:text-sm flex items-center ${
+            className={`text-sm flex items-center ${
               trend === "up" ? "text-green-500" : "text-red-500"
             }`}
           >
             {trend === "up" ? (
-              <TrendingUp className="w-3 h-3 sm:w-4 sm:h-4" />
+              <TrendingUp className="w-4 h-4" />
             ) : (
-              <TrendingDown className="w-3 h-3 sm:w-4 sm:h-4" />
+              <TrendingDown className="w-4 h-4" />
             )}
             {trendValue}
           </span>
@@ -138,7 +110,9 @@ const PieChartLegend = ({ data, centered = false }: PieChartLegendProps) => (
           className="w-4 h-4 rounded"
           style={{ backgroundColor: item.color }}
         />
-        <span className="text-sm text-muted-foreground">{item.name}</span>
+        <span className="text-sm text-muted-foreground">
+          {item.name ?? item.value}
+        </span>
       </div>
     ))}
   </div>
@@ -178,8 +152,6 @@ const Dashboard: React.FC = () => {
   } = useGetDashboardData();
 
   useEffect(() => {
-    console.log("User:", user);
-    console.log("Admin Emails:", ADMIN_EMAILS);
     if (!isLoading && (!user || !ADMIN_EMAILS.includes(user.email || ""))) {
       router.push("/");
     } else if (!isLoading && user && ADMIN_EMAILS.includes(user.email || "")) {
@@ -213,21 +185,22 @@ const Dashboard: React.FC = () => {
   const revenueChangeFormatted =
     dashboardInfo?.totalRevenue?.monthOverMonthChange || 0;
   const subscriptions = dashboardInfo?.recentSubscriptions || [];
+  const revenueData = dashboardInfo?.revenueChartDatas || [];
+  const planData = dashboardInfo?.planDistributionChartDatas || [];
+  const billingData = dashboardInfo?.billingDistributionChartDatas || [];
 
   return (
     <div className="min-h-screen bg-background">
-      <div className="p-4 sm:p-6 md:p-8">
-        <div className="mb-6 sm:mb-8">
-          <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-2">
-            Rehi
-          </h1>
-          <h2 className="text-lg sm:text-xl md:text-2xl font-semibold text-muted-foreground">
+      <div className="p-8">
+        <div className="mb-8">
+          <h1 className="text-4xl font-bold mb-2">Rehi</h1>
+          <h2 className="text-2xl font-semibold text-muted-foreground">
             Dashboard
           </h2>
         </div>
 
         {/* Stats Cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-6 sm:mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
           <StatCard
             title="Total Users"
             value={totalUsers.toLocaleString()}
@@ -244,7 +217,7 @@ const Dashboard: React.FC = () => {
           />
           <StatCard
             title="Total Revenue"
-            value={`$${(totalRevenue / 1000000).toFixed(2)}M`}
+            value={`$${totalRevenue.toFixed(2)}`}
             icon={DollarSign}
             color="bg-blue-200"
           />
@@ -259,16 +232,14 @@ const Dashboard: React.FC = () => {
         </div>
 
         {/* Bottom Section */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Annual Revenue Chart */}
           <Card className="lg:col-span-2">
             <CardHeader>
-              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-0">
-                <CardTitle className="text-base sm:text-lg">
-                  Annual Revenue Chart
-                </CardTitle>
+              <div className="flex items-center justify-between">
+                <CardTitle>Annual Revenue Chart</CardTitle>
                 <Select value={selectedYear} onValueChange={setSelectedYear}>
-                  <SelectTrigger className="w-full sm:w-24">
+                  <SelectTrigger className="w-24">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
@@ -280,67 +251,53 @@ const Dashboard: React.FC = () => {
               </div>
             </CardHeader>
             <CardContent>
-              <div className="w-full h-[250px] sm:h-[300px]">
-                <ResponsiveContainer width="100%" height="100%">
-                  <LineChart data={REVENUE_DATA}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
-                    <XAxis
-                      dataKey="month"
-                      stroke="#9ca3af"
-                      tick={{ fill: "#9ca3af" }}
-                    />
-                    <YAxis stroke="#9ca3af" tick={{ fill: "#9ca3af" }} />
-                    <Tooltip content={<CustomTooltip />} />
-                    <Line
-                      type="monotone"
-                      dataKey="value"
-                      stroke="#3b82f6"
-                      strokeWidth={2}
-                      dot={{ fill: "#3b82f6", r: 4 }}
-                      activeDot={{ r: 6 }}
-                    />
-                    <defs>
-                      <linearGradient
-                        id="colorGradient"
-                        x1="0"
-                        y1="0"
-                        x2="0"
-                        y2="1"
-                      >
-                        <stop
-                          offset="5%"
-                          stopColor="#3b82f6"
-                          stopOpacity={0.3}
-                        />
-                        <stop
-                          offset="95%"
-                          stopColor="#3b82f6"
-                          stopOpacity={0}
-                        />
-                      </linearGradient>
-                    </defs>
-                  </LineChart>
-                </ResponsiveContainer>
-              </div>
+              <ResponsiveContainer width="100%" height={300}>
+                <LineChart data={revenueData}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
+                  <XAxis
+                    dataKey="month"
+                    stroke="#9ca3af"
+                    tick={{ fill: "#9ca3af" }}
+                  />
+                  <YAxis stroke="#9ca3af" tick={{ fill: "#9ca3af" }} />
+                  <Tooltip content={<CustomTooltip />} />
+                  <Line
+                    type="monotone"
+                    dataKey="value"
+                    stroke="#3b82f6"
+                    strokeWidth={2}
+                    dot={{ fill: "#3b82f6", r: 4 }}
+                    activeDot={{ r: 6 }}
+                  />
+                  <defs>
+                    <linearGradient
+                      id="colorGradient"
+                      x1="0"
+                      y1="0"
+                      x2="0"
+                      y2="1"
+                    >
+                      <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.3} />
+                      <stop offset="95%" stopColor="#3b82f6" stopOpacity={0} />
+                    </linearGradient>
+                  </defs>
+                </LineChart>
+              </ResponsiveContainer>
             </CardContent>
           </Card>
 
           {/* New Subscriptions */}
           <Card>
             <CardHeader>
-              <CardTitle className="flex items-center justify-between text-base sm:text-lg">
+              <CardTitle className="flex items-center justify-between">
                 New Subscriptions
-                <span
-                  className="text-xl sm:text-2xl"
-                  role="img"
-                  aria-label="crown"
-                >
+                <span className="text-2xl" role="img" aria-label="crown">
                   👑
                 </span>
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <ScrollArea className="h-60 sm:h-80">
+              <ScrollArea className="h-80">
                 <div className="space-y-3 pr-4">
                   {subscriptions.length > 0 ? (
                     subscriptions.map((sub, idx) => (
@@ -369,31 +326,27 @@ const Dashboard: React.FC = () => {
           {/* Plan Distribution */}
           <Card>
             <CardHeader>
-              <CardTitle className="text-base sm:text-lg">
-                Plan Distribution
-              </CardTitle>
+              <CardTitle>Plan Distribution</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="w-full h-[180px] sm:h-[200px]">
-                <ResponsiveContainer width="100%" height="100%">
-                  <PieChart>
-                    <Pie
-                      data={PLAN_DATA}
-                      cx="50%"
-                      cy="50%"
-                      innerRadius={60}
-                      outerRadius={80}
-                      dataKey="value"
-                    >
-                      {PLAN_DATA.map((entry, index) => (
-                        <Cell key={`cell-plan-${index}`} fill={entry.color} />
-                      ))}
-                    </Pie>
-                  </PieChart>
-                </ResponsiveContainer>
-              </div>
+              <ResponsiveContainer width="100%" height={200}>
+                <PieChart>
+                  <Pie
+                    data={planData}
+                    cx="50%"
+                    cy="50%"
+                    innerRadius={60}
+                    outerRadius={80}
+                    dataKey="value"
+                  >
+                    {planData.map((entry, index) => (
+                      <Cell key={`cell-plan-${index}`} fill={entry.color} />
+                    ))}
+                  </Pie>
+                </PieChart>
+              </ResponsiveContainer>
               <div className="mt-4">
-                <PieChartLegend data={PLAN_DATA} />
+                <PieChartLegend data={planData} />
               </div>
             </CardContent>
           </Card>
@@ -401,36 +354,29 @@ const Dashboard: React.FC = () => {
           {/* Billing Distribution */}
           <Card className="lg:col-span-2">
             <CardHeader>
-              <CardTitle className="text-base sm:text-lg">
-                Billing Distribution
-              </CardTitle>
+              <CardTitle>Billing Distribution</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="w-full h-[180px] sm:h-[200px]">
-                <ResponsiveContainer width="100%" height="100%">
-                  <PieChart>
-                    <Pie
-                      data={BILLING_DATA}
-                      cx="50%"
-                      cy="50%"
-                      innerRadius={60}
-                      outerRadius={80}
-                      startAngle={90}
-                      endAngle={450}
-                      dataKey="value"
-                    >
-                      {BILLING_DATA.map((entry, index) => (
-                        <Cell
-                          key={`cell-billing-${index}`}
-                          fill={entry.color}
-                        />
-                      ))}
-                    </Pie>
-                  </PieChart>
-                </ResponsiveContainer>
-              </div>
+              <ResponsiveContainer width="100%" height={200}>
+                <PieChart>
+                  <Pie
+                    data={billingData}
+                    cx="50%"
+                    cy="50%"
+                    innerRadius={60}
+                    outerRadius={80}
+                    startAngle={90}
+                    endAngle={450}
+                    dataKey="value"
+                  >
+                    {billingData.map((entry, index) => (
+                      <Cell key={`cell-billing-${index}`} fill={entry.color} />
+                    ))}
+                  </Pie>
+                </PieChart>
+              </ResponsiveContainer>
               <div className="mt-4">
-                <PieChartLegend data={BILLING_DATA} centered />
+                <PieChartLegend data={billingData} centered />
               </div>
             </CardContent>
           </Card>
