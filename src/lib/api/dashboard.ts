@@ -1,26 +1,40 @@
 import { http } from "../http";
 export type MetricValue = {
-    value: number;
+  value: number;
 };
 
 export type MetricWithChange = MetricValue & {
-    monthOverMonthChange: number;
+  monthOverMonthChange: number;
+};
+
+export type RevenueChartData = {
+  month: number;
+  value: number;
+};
+
+export type UserChartData = {
+  name: number;
+  value: number;
+  color: string;
 };
 
 export type DashboardData = {
-    dashboard: {
-        totalUser: MetricValue;
-        newUser: MetricWithChange;
-        totalRevenue: MetricWithChange;
-        revenueChange: MetricValue;
-        recentSubscriptions: Subscription[];
-    };
+  dashboard: {
+    totalUser: MetricValue;
+    newUser: MetricWithChange;
+    totalRevenue: MetricWithChange;
+    revenueChange: MetricValue;
+    recentSubscriptions: Subscription[];
+    revenueChartDatas: RevenueChartData[];
+    planDistributionChartDatas: UserChartData[];
+    billingDistributionChartDatas: UserChartData[];
+  };
 };
 
 export type Subscription = {
-    email: string;
-    value: number;
-    createdAt: string;
+  email: string;
+  value: number;
+  createdAt: string;
 };
 export const getDashboardData = async () => {
   try {
