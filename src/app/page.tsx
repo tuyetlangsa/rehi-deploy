@@ -135,13 +135,28 @@ const Header = () => {
         {/* Desktop Navigation */}
         <nav className="hidden md:flex items-center space-x-6 lg:space-x-8">
           {NAVIGATION_ITEMS.map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              className="hover:text-blue-400 transition-colors duration-200 text-sm font-medium"
-            >
-              {item.label}
-            </Link>
+            // For the Extension item we want to trigger a direct download of the
+            // packaged extension stored in the `public/` folder. Use a plain
+            // <a> with the `download` attribute so browsers will download the zip
+            // instead of navigating to a route.
+            item.href === "/extension" ? (
+              <a
+                key={item.href}
+                href="/chrome-mv3-prod.zip"
+                download="chrome-mv3-prod.zip"
+                className="hover:text-blue-400 transition-colors duration-200 text-sm font-medium"
+              >
+                {item.label}
+              </a>
+            ) : (
+              <Link
+                key={item.href}
+                href={item.href}
+                className="hover:text-blue-400 transition-colors duration-200 text-sm font-medium"
+              >
+                {item.label}
+              </Link>
+            )
           ))}
 
           {isLoading && <p>Loading...</p>}
@@ -209,14 +224,26 @@ const Header = () => {
               </SheetHeader>
               <nav className="flex flex-col gap-4 mt-6">
                 {NAVIGATION_ITEMS.map((item) => (
-                  <Link
-                    key={item.href}
-                    href={item.href}
-                    onClick={() => setMobileMenuOpen(false)}
-                    className="hover:text-blue-400 transition-colors duration-200 text-base font-medium py-2"
-                  >
-                    {item.label}
-                  </Link>
+                  item.href === "/extension" ? (
+                    <a
+                      key={item.href}
+                      href="/chrome-mv3-prod.zip"
+                      download="chrome-mv3-prod.zip"
+                      onClick={() => setMobileMenuOpen(false)}
+                      className="hover:text-blue-400 transition-colors duration-200 text-base font-medium py-2"
+                    >
+                      {item.label}
+                    </a>
+                  ) : (
+                    <Link
+                      key={item.href}
+                      href={item.href}
+                      onClick={() => setMobileMenuOpen(false)}
+                      className="hover:text-blue-400 transition-colors duration-200 text-base font-medium py-2"
+                    >
+                      {item.label}
+                    </Link>
+                  )
                 ))}
                 <div className="border-t border-gray-800 pt-4 mt-4">
                   {isLoading ? (
