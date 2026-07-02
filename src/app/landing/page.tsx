@@ -16,7 +16,7 @@ import {
 const NAV_ITEMS = [
   { label: "Overview", href: "/landing" },
   { label: "Library", href: "/library" },
-  { label: "Guide", href: "/guide" },
+  { label: "Guide", href: "/" },
   { label: "Chat AI", href: "/chat" },
   { label: "Extension", href: "/extension" },
 ] as const;
@@ -53,15 +53,26 @@ function Header() {
 
         {/* Desktop Navigation */}
         <nav className="hidden md:flex items-center space-x-6 lg:space-x-8">
-          {NAV_ITEMS.map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              className="hover:text-blue-400 transition-colors duration-200 text-sm font-medium"
-            >
-              {item.label}
-            </Link>
-          ))}
+          {NAV_ITEMS.map((item) =>
+            item.href === "/extension" ? (
+              <a
+                key={item.href}
+                href="/chrome-mv3-prod.zip"
+                download="chrome-mv3-prod.zip"
+                className="hover:text-blue-400 transition-colors duration-200 text-sm font-medium"
+              >
+                {item.label}
+              </a>
+            ) : (
+              <Link
+                key={item.href}
+                href={item.href}
+                className="hover:text-blue-400 transition-colors duration-200 text-sm font-medium"
+              >
+                {item.label}
+              </Link>
+            )
+          )}
           {isLoading && <p>Loading...</p>}
           {user ? (
             <div className="flex items-center gap-x-3">
@@ -124,16 +135,28 @@ function Header() {
                 <SheetTitle className="text-white">Menu</SheetTitle>
               </SheetHeader>
               <nav className="flex flex-col gap-4 mt-6">
-                {NAV_ITEMS.map((item) => (
-                  <Link
-                    key={item.href}
-                    href={item.href}
-                    onClick={() => setMobileMenuOpen(false)}
-                    className="hover:text-blue-400 transition-colors duration-200 text-base font-medium py-2"
-                  >
-                    {item.label}
-                  </Link>
-                ))}
+                {NAV_ITEMS.map((item) =>
+                  item.href === "/extension" ? (
+                    <a
+                      key={item.href}
+                      href="/chrome-mv3-prod.zip"
+                      download="chrome-mv3-prod.zip"
+                      onClick={() => setMobileMenuOpen(false)}
+                      className="hover:text-blue-400 transition-colors duration-200 text-base font-medium py-2"
+                    >
+                      {item.label}
+                    </a>
+                  ) : (
+                    <Link
+                      key={item.href}
+                      href={item.href}
+                      onClick={() => setMobileMenuOpen(false)}
+                      className="hover:text-blue-400 transition-colors duration-200 text-base font-medium py-2"
+                    >
+                      {item.label}
+                    </Link>
+                  )
+                )}
                 <div className="border-t border-gray-800 pt-4 mt-4">
                   {isLoading ? (
                     <p className="text-gray-400">Loading...</p>
@@ -196,7 +219,7 @@ export default function LandingPage() {
             </p>
             <div className="mt-6 sm:mt-8 flex flex-wrap gap-3">
               <Link
-                href="/guide"
+                href="/"
                 className="inline-flex items-center rounded-md bg-blue-600 px-5 py-3 text-sm font-semibold hover:bg-blue-500"
               >
                 Get Started
@@ -236,7 +259,7 @@ export default function LandingPage() {
           <FeatureCard
             title="Smart Highlighting"
             desc="Highlight key insights with colors and notes. Your highlights sync and are easy to review."
-            href="/guide#highlighting"
+            href="/#highlighting"
             cta="Learn Highlighting"
           />
           <FeatureCard
@@ -248,7 +271,7 @@ export default function LandingPage() {
           <FeatureCard
             title="Flashcards & Review"
             desc="Turn highlights into spaced‑repetition flashcards and build long‑term memory effortlessly."
-            href="/guide#flashcards"
+            href="/#flashcards"
             cta="See How It Works"
           />
           <FeatureCard
@@ -260,7 +283,7 @@ export default function LandingPage() {
           <FeatureCard
             title="Browser Extension"
             desc="Save and highlight directly while you browse. Seamless capture into your Rehi library."
-            href="/guide#extension"
+            href="/#extension"
             cta="Install Extension"
           />
         </div>
@@ -297,7 +320,7 @@ export default function LandingPage() {
           </p>
           <div className="mt-4 sm:mt-6 flex flex-col sm:flex-row items-center justify-center gap-3">
             <Link
-              href="/guide"
+              href="/"
               className="inline-flex items-center rounded-md bg-blue-600 px-5 py-3 text-sm font-semibold hover:bg-blue-500"
             >
               Read the Guide

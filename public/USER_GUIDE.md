@@ -42,19 +42,66 @@ Rehi is an AI-powered knowledge management platform designed to help you read, h
 
 ### 2. Install Browser Extension (Optional but Recommended)
 
-1. Install **rehi-browser-extension** from Chrome Web Store
-2. Pin the extension to your browser toolbar
-3. Open the extension popup
-4. You'll see the login screen if you're not authenticated:
+### Extension
+
+Follow these steps to download, extract, and load the Rehi browser extension using your browser's Developer Mode.
+
+#### Step 1: Download the Extension
+
+1. Log in to the Rehi web application
+2. Click **Extension** in the top navigation bar
+3. Your browser will download `chrome-mv3-prod.zip`
+
+You can also [download the extension directly](/chrome-mv3-prod.zip).
+
+#### Step 2: Extract the ZIP File
+
+1. Locate `chrome-mv3-prod.zip` in your **Downloads** folder
+2. Extract the archive:
+   - **Windows**: Right-click the file and choose **Extract All…**
+   - **Mac**: Double-click the file to unzip
+3. Save the extracted folder somewhere permanent (for example, `Documents/rehi-extension`)
+4. Open the extracted folder and confirm it contains a `manifest.json` file
+
+> **Important:** Do not delete or move this folder after installing. The browser loads the extension directly from this location.
+
+#### Step 3: Load the Extension in Developer Mode
+
+**Google Chrome**
+
+1. Open a new tab and go to `chrome://extensions`
+2. Turn on **Developer mode** (toggle in the top-right corner)
+3. Click **Load unpacked**
+4. Select the extracted extension folder (the folder that contains `manifest.json`)
+5. Rehi should now appear in your extensions list
+
+**Microsoft Edge**
+
+1. Open a new tab and go to `edge://extensions`
+2. Turn on **Developer mode**
+3. Click **Load unpacked**
+4. Select the extracted extension folder
+
+**Other Chromium browsers** (Brave, Arc, etc.)
+
+1. Open your browser's extensions page
+2. Enable **Developer mode**
+3. Click **Load unpacked** and select the extracted folder
+
+#### Step 4: Pin and Log In
+
+1. Pin the Rehi extension to your browser toolbar (click the puzzle icon, then the pin next to Rehi)
+2. Open the extension popup
+3. You'll see the login screen if you're not authenticated:
 
 ![Extension Login Screen](/guide-picture/not-login-extension.png)
 
-5. Click "Login" to authenticate
-6. After successful login, you'll see the authenticated extension interface:
+4. Click **Login** to authenticate
+5. After successful login, you'll see the authenticated extension interface:
 
 ![Extension After Login](/guide-picture/login-success-extension.png)
 
-7. You're now ready to save articles directly from the web!
+6. You're now ready to save articles directly from the web!
 
 ---
 
@@ -64,9 +111,9 @@ Rehi is an AI-powered knowledge management platform designed to help you read, h
 
 **Prerequisites:**
 
-- Install rehi-browser-extension from Chrome store
-- Pin the extension and open popup
-- Click button login in the popup
+- Download, extract, and load the Rehi extension in Developer Mode (see [Extension Installation](#extension))
+- Pin the extension and open the popup
+- Click **Login** in the popup
 
 **To Save an Article:**
 
@@ -718,7 +765,7 @@ Rehi transforms how you read, learn, and remember information. By combining inte
 
 **Start your journey:**
 
-1. Install the browser extension
+1. Download and install the browser extension in Developer Mode
 2. Save your first article with Alt + R
 3. Highlight important content
 4. Ask questions via AI chat

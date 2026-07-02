@@ -10,7 +10,7 @@ import Image from "next/image";
 const NAV_ITEMS = [
   { label: "Overview", href: "/landing" },
   { label: "Library", href: "/library" },
-  { label: "Guide", href: "/guide" },
+  { label: "Guide", href: "/" },
   { label: "Chat AI", href: "/chat" },
   { label: "Extension", href: "/extension" },
 ] as const;
@@ -36,23 +36,36 @@ function Header() {
   return (
     <header className="bg-[#0D0D0D] text-white h-24 flex items-center sticky top-0 z-50">
       <div className="container mx-auto px-6 flex justify-between items-center h-full">
-        <Image
-          src="/icons/rehi.svg"
-          alt="REHI Logo"
-          width={115}
-          height={60}
-          className="h-auto"
-        />
+        <Link href="/">
+          <Image
+            src="/icons/rehi.svg"
+            alt="REHI Logo"
+            width={115}
+            height={60}
+            className="h-auto"
+          />
+        </Link>
         <nav className="hidden md:flex items-center space-x-8">
-          {NAV_ITEMS.map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              className="hover:text-blue-400 transition-colors duration-200 text-sm font-medium"
-            >
-              {item.label}
-            </Link>
-          ))}
+          {NAV_ITEMS.map((item) =>
+            item.href === "/extension" ? (
+              <a
+                key={item.href}
+                href="/chrome-mv3-prod.zip"
+                download="chrome-mv3-prod.zip"
+                className="hover:text-blue-400 transition-colors duration-200 text-sm font-medium"
+              >
+                {item.label}
+              </a>
+            ) : (
+              <Link
+                key={item.href}
+                href={item.href}
+                className="hover:text-blue-400 transition-colors duration-200 text-sm font-medium"
+              >
+                {item.label}
+              </Link>
+            )
+          )}
           {isLoading && <p>Loading...</p>}
           {user ? (
             <div className="flex items-center gap-x-3">
@@ -87,7 +100,7 @@ function Header() {
   );
 }
 
-function GuidePage() {
+export function UserGuidePage() {
   const [markdownContent, setMarkdownContent] = useState<string>("");
   const [loading, setLoading] = useState(true);
 
@@ -107,7 +120,6 @@ function GuidePage() {
       });
   }, []);
 
-  // Handle smooth scroll to anchor on mount or hash change
   useEffect(() => {
     if (!loading && markdownContent) {
       const handleHashChange = () => {
@@ -116,7 +128,7 @@ function GuidePage() {
           const id = hash.substring(1);
           const element = document.getElementById(id);
           if (element) {
-            const headerOffset = 80; // Account for sticky header
+            const headerOffset = 80;
             const elementPosition = element.getBoundingClientRect().top;
             const offsetPosition =
               elementPosition + window.pageYOffset - headerOffset;
@@ -129,16 +141,13 @@ function GuidePage() {
         }
       };
 
-      // Handle initial hash
       setTimeout(handleHashChange, 100);
 
-      // Handle hash changes
       window.addEventListener("hashchange", handleHashChange);
       return () => window.removeEventListener("hashchange", handleHashChange);
     }
   }, [loading, markdownContent]);
 
-  // Extract text from ReactNode
   const extractText = (children: React.ReactNode): string => {
     if (typeof children === "string") return children;
     if (typeof children === "number") return String(children);
@@ -151,13 +160,12 @@ function GuidePage() {
     return "";
   };
 
-  // Generate ID from heading text
   const generateId = (text: string): string => {
     return text
       .toLowerCase()
-      .replace(/[^\w\s-]/g, "") // Remove special characters
-      .replace(/\s+/g, "-") // Replace spaces with hyphens
-      .replace(/--+/g, "-") // Replace multiple hyphens with single
+      .replace(/[^\w\s-]/g, "")
+      .replace(/\s+/g, "-")
+      .replace(/--+/g, "-")
       .trim();
   };
 
@@ -326,7 +334,7 @@ function GuidePage() {
                     const id = href.substring(1);
                     const element = document.getElementById(id);
                     if (element) {
-                      const headerOffset = 80; // Account for sticky header
+                      const headerOffset = 80;
                       const elementPosition =
                         element.getBoundingClientRect().top;
                       const offsetPosition =
@@ -337,7 +345,6 @@ function GuidePage() {
                         behavior: "smooth",
                       });
 
-                      // Update URL hash without triggering scroll
                       window.history.pushState(null, "", href);
                     }
                   }
@@ -439,5 +446,3 @@ function GuidePage() {
     </div>
   );
 }
-
-export default GuidePage;

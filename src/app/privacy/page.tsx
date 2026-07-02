@@ -12,7 +12,7 @@ export default function PrivacyPolicyPage() {
             Rehi
           </Link>
           <Link
-            href="/guide"
+            href="/"
             className="text-sm text-muted-foreground hover:text-foreground transition-colors"
           >
             Guide
