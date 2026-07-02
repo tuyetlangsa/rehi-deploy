@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import { withPageAuthRequired } from "@auth0/nextjs-auth0";
+import { withOfflineAuth } from "@/components/offline-auth-guard";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 
 const SettingsPage = () => {
@@ -25,4 +25,4 @@ const SettingsPage = () => {
   );
 };
 
-export default withPageAuthRequired(SettingsPage);
+export default withOfflineAuth(SettingsPage);
