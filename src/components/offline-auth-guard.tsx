@@ -1,7 +1,22 @@
 "use client";
 import { withPageAuthRequired } from "@auth0/nextjs-auth0";
 import type { ComponentType } from "react";
-import { useEffect, useState } from "react";
+import { useSyncExternalStore } from "react";
+
+function subscribe(callback: () => void) {
+  window.addEventListener("online", callback);
+  window.addEventListener("offline", callback);
+  return () => {
+    window.removeEventListener("online", callback);
+    window.removeEventListener("offline", callback);
+  };
+}
+
+// Client value; `true` on the server so hydration matches the prerendered/
+// precached shell. useSyncExternalStore reconciles to the real client value
+// right after hydration WITHOUT a hydration-mismatch warning.
+const getSnapshot = () => navigator.onLine;
+const getServerSnapshot = () => true;
 
 /**
  * Wraps a page so it renders directly when offline (fail-open) and behaves
@@ -9,23 +24,14 @@ import { useEffect, useState } from "react";
  * internal offline behavior.
  */
 export function withOfflineAuth<P extends object>(Page: ComponentType<P>) {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const Guarded = withPageAuthRequired(Page as ComponentType<any>);
   return function OfflineAware(props: P) {
-    // Lazy init from navigator.onLine so an offline first-load never briefly
-    // renders the guarded (redirect-prone) branch. `true` during SSR.
-    const [online, setOnline] = useState(() =>
-      typeof navigator === "undefined" ? true : navigator.onLine
+    const online = useSyncExternalStore(
+      subscribe,
+      getSnapshot,
+      getServerSnapshot
     );
-    useEffect(() => {
-      const update = () => setOnline(navigator.onLine);
-      update();
-      window.addEventListener("online", update);
-      window.addEventListener("offline", update);
-      return () => {
-        window.removeEventListener("online", update);
-        window.removeEventListener("offline", update);
-      };
-    }, []);
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     return online ? <Guarded {...(props as any)} /> : <Page {...props} />;
   };

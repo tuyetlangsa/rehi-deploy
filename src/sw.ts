@@ -29,7 +29,7 @@ const serwist = new Serwist({
         url: "/~offline-article",
         matcher: ({ request }) =>
           request.destination === "document" &&
-          /^\/articles\/[^/]+$/.test(new URL(request.url).pathname),
+          /^\/articles\/[^/]+\/?$/.test(new URL(request.url).pathname),
       },
       {
         // Any other uncached document -> generic offline page.
