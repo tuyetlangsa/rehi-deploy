@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 import Link from "next/link";
-import { withPageAuthRequired } from "@auth0/nextjs-auth0";
+import { withOfflineAuth } from "@/components/offline-auth-guard";
 import { useLiveQuery } from "dexie-react-hooks";
 import { db } from "@/db/db";
 import { Button } from "@/components/ui/button";
@@ -145,4 +145,4 @@ const TagsPage = () => {
   );
 };
 
-export default withPageAuthRequired(TagsPage);
+export default withOfflineAuth(TagsPage);

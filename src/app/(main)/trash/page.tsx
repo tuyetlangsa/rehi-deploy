@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import { withPageAuthRequired } from "@auth0/nextjs-auth0";
+import { withOfflineAuth } from "@/components/offline-auth-guard";
 import { useLiveQuery } from "dexie-react-hooks";
 import { db } from "@/db/db";
 import TrashArticleItem from "./trash-article-item";
@@ -48,4 +48,4 @@ const TrashPage = () => {
   );
 };
 
-export default withPageAuthRequired(TrashPage);
+export default withOfflineAuth(TrashPage);

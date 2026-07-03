@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { withPageAuthRequired } from "@auth0/nextjs-auth0";
+import { withOfflineAuth } from "@/components/offline-auth-guard";
 import { FlashcardService } from "@/services/flashcard-service";
 import { db } from "@/db/db";
 import type Highlight from "@/db/entities/highlight";
@@ -181,4 +181,4 @@ const ReviewPage = () => {
   );
 };
 
-export default withPageAuthRequired(ReviewPage);
+export default withOfflineAuth(ReviewPage);

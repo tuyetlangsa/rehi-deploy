@@ -22,6 +22,22 @@ const serwist = new Serwist({
   navigationPreload: true,
   runtimeCaching: defaultCache,
   disableDevLogs: true,
+  fallbacks: {
+    entries: [
+      {
+        // Dynamic article routes -> shell that renders from IndexedDB.
+        url: "/~offline-article",
+        matcher: ({ request }) =>
+          request.destination === "document" &&
+          /^\/articles\/[^/]+\/?$/.test(new URL(request.url).pathname),
+      },
+      {
+        // Any other uncached document -> generic offline page.
+        url: "/~offline",
+        matcher: ({ request }) => request.destination === "document",
+      },
+    ],
+  },
 });
 
 const mutationsQueue = new BackgroundSyncPlugin("mutations-queue", {

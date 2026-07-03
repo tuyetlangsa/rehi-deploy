@@ -12,7 +12,7 @@ import { addTag } from "@/db/repositories/tag";
 import { TagService } from "@/services/tag-service";
 import dayjs from "dayjs";
 import isToday from "dayjs/plugin/isToday";
-import { withPageAuthRequired } from "@auth0/nextjs-auth0";
+import { withOfflineAuth } from "@/components/offline-auth-guard";
 import { useSearchParams, useRouter } from "next/navigation";
 import { ArticleService, publicArticle } from "@/services/article-service";
 import { LocalStorageService } from "@/services/local-storage";
@@ -661,4 +661,4 @@ function Page() {
   );
 }
 
-export default withPageAuthRequired(Page);
+export default withOfflineAuth(Page);
