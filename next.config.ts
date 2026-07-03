@@ -8,16 +8,17 @@ const withSerwist = withSerwistInit({
   swDest: "public/sw.js",
   disable: process.env.NODE_ENV === "development",
   cacheOnNavigation: true,
+  // Only precache routes that return 200 without a session. Auth-gated,
+  // server-rendered routes (/articles, /tags, /trash, /review, /profile,
+  // /settings) return 500 unauthenticated; including them makes the Serwist
+  // install precache (addAll) reject, so the SW never activates and the whole
+  // app breaks offline (ERR_FAILED). Those routes are covered offline by
+  // cacheOnNavigation (once visited online) + the /~offline fallback, and
+  // articles render via the /~offline-article shell from IndexedDB.
   additionalPrecacheEntries: [
     { url: "/~offline", revision },
     { url: "/~offline-article", revision },
     { url: "/", revision },
-    { url: "/articles", revision },
-    { url: "/tags", revision },
-    { url: "/trash", revision },
-    { url: "/review", revision },
-    { url: "/profile", revision },
-    { url: "/settings", revision },
   ],
 });
 
