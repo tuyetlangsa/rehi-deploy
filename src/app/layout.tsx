@@ -3,6 +3,7 @@ import { Shippori_Antique } from "next/font/google";
 import "./globals.css";
 import Providers from "@/components/providers";
 import { SyncProvider } from "@/components/sync-provider";
+import { OfflineNavGuard } from "@/components/offline-nav-guard";
 
 const shipporiAntique = Shippori_Antique({
   variable: "--font-shippori-antique",
@@ -48,6 +49,7 @@ export default function RootLayout({
   return (
     <html lang="en" className="dark">
       <body className={`${shipporiAntique.variable} antialiased`}>
+        <OfflineNavGuard />
         <SyncProvider>
           <Providers>{children}</Providers>
         </SyncProvider>

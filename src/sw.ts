@@ -32,6 +32,13 @@ const serwist = new Serwist({
           /^\/articles\/[^/]+\/?$/.test(new URL(request.url).pathname),
       },
       {
+        // Article list route -> shell that renders the list from IndexedDB.
+        url: "/~offline-list",
+        matcher: ({ request }) =>
+          request.destination === "document" &&
+          /^\/articles\/?$/.test(new URL(request.url).pathname),
+      },
+      {
         // Any other uncached document -> generic offline page.
         url: "/~offline",
         matcher: ({ request }) => request.destination === "document",
