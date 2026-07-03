@@ -32,14 +32,9 @@ const serwist = new Serwist({
           /^\/articles\/[^/]+\/?$/.test(new URL(request.url).pathname),
       },
       {
-        // Article list route -> shell that renders the list from IndexedDB.
-        url: "/~offline-list",
-        matcher: ({ request }) =>
-          request.destination === "document" &&
-          /^\/articles\/?$/.test(new URL(request.url).pathname),
-      },
-      {
-        // Any other uncached document -> generic offline page.
+        // Every other document (list, tags, trash, review, settings, unknown)
+        // -> dispatcher shell that renders the right view from IndexedDB
+        // inside the app chrome (sidebar + header).
         url: "/~offline",
         matcher: ({ request }) => request.destination === "document",
       },
