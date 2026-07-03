@@ -39,6 +39,29 @@ export default function Providers({ children }: { children: ReactNode }) {
     }
   }, []);
 
+  // When a new service worker takes control (first install, or a fresh deploy),
+  // reload once so the page is actually served through the SW. Without this the
+  // tab keeps running uncontrolled until a manual refresh, so offline silently
+  // fails right after a deploy. The `refreshing` guard prevents a reload loop.
+  useEffect(() => {
+    if (!("serviceWorker" in navigator)) return;
+    let refreshing = false;
+    const onControllerChange = () => {
+      if (refreshing) return;
+      refreshing = true;
+      window.location.reload();
+    };
+    navigator.serviceWorker.addEventListener(
+      "controllerchange",
+      onControllerChange
+    );
+    return () =>
+      navigator.serviceWorker.removeEventListener(
+        "controllerchange",
+        onControllerChange
+      );
+  }, []);
+
   // Global keyboard handler for Ctrl+P / Cmd+P
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
