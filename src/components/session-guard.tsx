@@ -11,7 +11,7 @@ export function withSessionRequired<P extends object>(Page: ComponentType<P>) {
       if (status !== "unauthenticated") return;
       const { pathname, search, hash } = window.location;
       const returnTo = encodeURIComponent(pathname + search + hash);
-      window.location.assign(`/auth/login?returnTo=${returnTo}`);
+      window.location.assign(`/login?returnTo=${returnTo}`);
     }, [status]);
 
     if (status === "loading" || status === "unauthenticated") return null;

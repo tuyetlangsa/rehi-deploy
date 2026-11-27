@@ -85,7 +85,7 @@ function Header() {
           ) : (
             <div className="flex h-5 items-center gap-x-3">
               <Link
-                href="/auth/login"
+                href="/login"
                 className="hover:text-blue-400 transition-colors duration-200 text-sm font-medium"
               >
                 Log In
