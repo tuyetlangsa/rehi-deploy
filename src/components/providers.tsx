@@ -5,6 +5,7 @@ import { ReactNode, useEffect } from "react";
 import { useSearchPaletteStore } from "@/store/search-palette-store";
 import { SearchCommandPalette } from "@/components/search-command-palette";
 import { Toaster } from "sonner";
+import { ExtensionBridge } from "@/components/extension-bridge";
 
 const queryClient = new QueryClient();
 
@@ -52,6 +53,7 @@ export default function Providers({ children }: { children: ReactNode }) {
       {children}
       <SearchCommandPalette />
       <Toaster />
+      <ExtensionBridge />
     </QueryClientProvider>
   );
 }
