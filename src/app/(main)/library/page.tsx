@@ -1,9 +1,9 @@
 "use client";
 import React from "react";
-import { withPageAuthRequired } from "@auth0/nextjs-auth0";
+import { withSessionRequired } from "@/components/session-guard";
 
 const LibraryPage = () => {
   return <div>library</div>;
 };
 
-export default withPageAuthRequired(LibraryPage);
+export default withSessionRequired(LibraryPage);

@@ -29,7 +29,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { useUser } from "@auth0/nextjs-auth0";
+import { useSession } from "@/hooks/use-session";
 import { useRouter } from "next/navigation";
 import { useGetDashboardData } from "@/hooks/use-dashboard";
 
@@ -143,7 +143,7 @@ const CustomTooltip: React.FC<CustomTooltipProps> = ({
 // Main Dashboard Component
 const Dashboard: React.FC = () => {
   const [selectedYear, setSelectedYear] = React.useState<string>("2025");
-  const { user, isLoading } = useUser();
+  const { user, isLoading } = useSession();
   const router = useRouter();
   const {
     mutate: fetchDashboardData,
