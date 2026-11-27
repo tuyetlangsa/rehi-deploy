@@ -22,7 +22,7 @@ import {
 import { BookOpen, Check, X, Loader2 } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useState, useCallback, useEffect } from "react";
-import { useUser } from "@auth0/nextjs-auth0";
+import { useSession } from "@/hooks/use-session";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { useSubscriptionStore } from "@/store/subscription-store";
@@ -48,7 +48,7 @@ export default function ProfileSettings() {
   const [isSaving, setIsSaving] = useState(false);
   const [showCancelDialog, setShowCancelDialog] = useState(false);
 
-  const { user, isLoading } = useUser();
+  const { user, isLoading } = useSession();
   const { subscription, fetch: fetchSubscription } = useSubscriptionStore();
   const cancelSubscription = useCancelSubscription();
 
@@ -89,9 +89,9 @@ export default function ProfileSettings() {
     if (user) {
       reset({
         email: user.email || "",
-        phone: user.phone || DEFAULT_PHONE,
-        username: user.username || DEFAULT_USERNAME,
-        reminderTime: user.reminderTime || DEFAULT_REMINDER_TIME,
+        phone: DEFAULT_PHONE,
+        username: DEFAULT_USERNAME,
+        reminderTime: DEFAULT_REMINDER_TIME,
       });
     }
   }, [user, reset]);

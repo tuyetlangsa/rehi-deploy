@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { withPageAuthRequired } from "@auth0/nextjs-auth0";
+import { withSessionRequired } from "@/components/session-guard";
 import { useParams } from "next/navigation";
 import { Calendar, Clock } from "lucide-react";
 import { applyHighlights } from "@/lib/highlight-util";
@@ -126,4 +126,4 @@ const PublicArticlePage = () => {
   );
 };
 
-export default withPageAuthRequired(PublicArticlePage);
+export default withSessionRequired(PublicArticlePage);

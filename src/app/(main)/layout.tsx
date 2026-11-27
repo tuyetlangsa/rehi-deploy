@@ -13,7 +13,7 @@ export default async function Layout({
   children: React.ReactNode;
 }) {
   const cookieStore = await cookies();
-  const defaultOpen = cookieStore.get("sidebar_state")?.value === "true";
+  const defaultOpen = cookieStore.get("main-sidebar:state")?.value === "true";
   return (
     <SidebarProvider name="main-sidebar" defaultOpen={defaultOpen}>
       <AppSidebar />

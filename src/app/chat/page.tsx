@@ -1,7 +1,7 @@
 "use client";
 import { Send, Bot, User, Trash2 } from "lucide-react";
 import React from "react";
-import { withPageAuthRequired } from "@auth0/nextjs-auth0";
+import { withSessionRequired } from "@/components/session-guard";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { ChatService, ChatHistoryMessage } from "@/services/chat-service";
@@ -635,4 +635,4 @@ function ChatPage() {
   return <ChatBot />;
 }
 
-export default withPageAuthRequired(ChatPage);
+export default withSessionRequired(ChatPage);

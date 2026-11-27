@@ -1,8 +1,6 @@
-import { CreateUserRequest } from "@/constants/user";
 import { Auth0Client } from "@auth0/nextjs-auth0/server";
 import { NextResponse } from "next/server";
-import { http } from "./http";
-import axios, { AxiosError } from "axios";
+import { callRehiAuth, setSessionCookie } from "./session-server";
 // Initialize the Auth0 client
 export const auth0 = new Auth0Client({
   // Options are loaded from environment variables by default
@@ -27,37 +25,21 @@ export const auth0 = new Auth0Client({
       );
     }
 
-    try {
-      const request: CreateUserRequest = {
-        email: session?.user.email ?? "",
-        fullName: session?.user.name ?? "",
-      };
-
-      const accessToken = session?.tokenSet.accessToken;
-
-      const response = await http.post<string>("/users", request, {
-        token: accessToken, // truyền token qua HttpOptions
-      });
-
-      if (response.isSuccess) {
-        // User created successfully
-      }
-    } catch (error) {
-      if (axios.isAxiosError(error)) {
-        const axiosError = error as AxiosError<unknown>;
-        console.error(
-          "Create user error:",
-          axiosError.response?.status,
-          axiosError.response?.data
-        );
-      } else {
-        console.error("Unknown error:", error);
-      }
+    const auth0AccessToken = session?.tokenSet.accessToken;
+    const exchange = auth0AccessToken
+      ? await callRehiAuth("/auth/auth0-exchange", { bearer: auth0AccessToken })
+      : null;
+    if (!exchange?.ok) {
+      console.error("Auth0 exchange failed:", exchange?.status, exchange?.body);
+      return NextResponse.redirect(
+        new URL("/error?error=rehi_session_failed", process.env.APP_BASE_URL)
+      );
     }
 
-    // complete the redirect to the provided returnTo URL
-    return NextResponse.redirect(
+    const res = NextResponse.redirect(
       new URL(context.returnTo || "/", process.env.APP_BASE_URL)
     );
+    setSessionCookie(res, exchange.pair);
+    return res;
   },
 });

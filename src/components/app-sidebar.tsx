@@ -49,7 +49,8 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "./ui/button";
-import { useUser } from "@auth0/nextjs-auth0";
+import { useSession } from "@/hooks/use-session";
+import { logout } from "@/lib/session";
 import { Spinner } from "./ui/shadcn-io/spinner";
 
 const homeItem = { title: "Home", url: "/", icon: Home };
@@ -99,7 +100,7 @@ function SidebarLink({
 }
 
 export function AppSidebar() {
-  const { user, isLoading } = useUser();
+  const { user, isLoading } = useSession();
 
   return (
     <Sidebar collapsible="icon" className="dark text-white border-none">
@@ -249,9 +250,7 @@ export function AppSidebar() {
               </Link>
             </DropdownMenuItem>
             <DropdownMenuItem
-              onClick={() => {
-                window.location.href = "/auth/logout";
-              }}
+              onClick={logout}
               className="flex items-center gap-3 px-4 py-3 cursor-pointer hover:bg-gray-800"
             >
               <div className="flex flex-row items-center gap-5">

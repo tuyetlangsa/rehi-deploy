@@ -1,7 +1,9 @@
 "use client";
 import Image from "next/image";
 import Link from "next/link";
-import { getAccessToken, useUser } from "@auth0/nextjs-auth0";
+import { getAccessToken } from "@auth0/nextjs-auth0";
+import { useSession } from "@/hooks/use-session";
+import { logout } from "@/lib/session";
 import { useEffect, useState } from "react";
 import { Menu } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -22,7 +24,7 @@ const NAV_ITEMS = [
 ] as const;
 
 function Header() {
-  const { user, isLoading } = useUser();
+  const { user, isLoading } = useSession();
   const [jwt, setJwt] = useState<string | null>(null);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -84,12 +86,13 @@ function Header() {
                 className="rounded-full"
               />
               <span className="text-sm">{user.email}</span>
-              <a
-                href="/auth/logout"
-                className="hover:text-blue-400 transition-colors duration-200 text-sm font-medium"
+              <button
+                type="button"
+                onClick={logout}
+                className="cursor-pointer hover:text-blue-400 transition-colors duration-200 text-sm font-medium"
               >
                 Log Out
-              </a>
+              </button>
             </div>
           ) : (
             <div className="flex h-5 items-center gap-x-3">
@@ -174,13 +177,16 @@ function Header() {
                           {user.email}
                         </span>
                       </div>
-                      <a
-                        href="/auth/logout"
-                        onClick={() => setMobileMenuOpen(false)}
-                        className="hover:text-blue-400 transition-colors duration-200 text-sm font-medium"
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setMobileMenuOpen(false);
+                          logout();
+                        }}
+                        className="cursor-pointer text-left hover:text-blue-400 transition-colors duration-200 text-sm font-medium"
                       >
                         Log Out
-                      </a>
+                      </button>
                     </div>
                   ) : (
                     <Link
