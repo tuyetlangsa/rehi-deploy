@@ -1,8 +1,7 @@
 "use client";
 
-import { getAccessToken } from "@auth0/nextjs-auth0";
 import { useSession } from "@/hooks/use-session";
-import { logout } from "@/lib/session";
+import { getAccessToken, logout } from "@/lib/session";
 import React, { useEffect, useState } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
