@@ -1,9 +1,8 @@
 "use client";
 import Image from "next/image";
 import Link from "next/link";
-import { getAccessToken } from "@auth0/nextjs-auth0";
 import { useSession } from "@/hooks/use-session";
-import { logout } from "@/lib/session";
+import { getAccessToken, logout } from "@/lib/session";
 import { useEffect, useState } from "react";
 import { Menu } from "lucide-react";
 import { Button } from "@/components/ui/button";
