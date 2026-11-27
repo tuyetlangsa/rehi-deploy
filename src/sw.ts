@@ -46,8 +46,9 @@ const mutationsQueue = new BackgroundSyncPlugin("mutations-queue", {
   maxRetentionTime: 24 * 60,
 });
 
-const isApiMutation = ({ request }: { url: URL; request: Request }) =>
-  ["POST", "PUT", "PATCH", "DELETE"].includes(request.method);
+const isApiMutation = ({ url, request }: { url: URL; request: Request }) =>
+  ["POST", "PUT", "PATCH", "DELETE"].includes(request.method) &&
+  !(url.origin === self.location.origin && url.pathname.startsWith("/api/auth/"));
 
 const mutationHandler = new NetworkOnly({ plugins: [mutationsQueue] });
 serwist.registerCapture(isApiMutation, mutationHandler, "POST");

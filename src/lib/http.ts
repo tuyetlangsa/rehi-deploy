@@ -1,19 +1,19 @@
 import { BaseResponse } from "@/constants/api-result";
-import { getAccessToken } from "@auth0/nextjs-auth0";
-import axios, { AxiosError, AxiosInstance, AxiosRequestConfig } from "axios";
+import { API_BASE_URL } from "@/lib/api-base-url";
+import { getAccessToken, getAccessTokenAfterRejection } from "@/lib/session";
+import axios, { AxiosError, AxiosInstance, AxiosResponse } from "axios";
 
 type ApiResponse<T> = BaseResponse<T> & {
   statusCode: number;
 };
 
 export interface HttpOptions {
-  token?: string | null;
   signal?: AbortSignal;
   timeoutMs?: number;
 }
 
 const instance: AxiosInstance = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_URL || "http://localhost:5204",
+  baseURL: API_BASE_URL,
   timeout: 100000,
   headers: {
     "Content-Type": "application/json",
@@ -33,31 +33,26 @@ async function handleRequest<T>(
   data?: unknown,
   options: HttpOptions = {}
 ): Promise<ApiResponse<T>> {
-  try {
-    const config: AxiosRequestConfig = {
+  const send = (token: string | null) =>
+    instance.request<BaseResponse<T>>({
       method,
       url,
       data,
       timeout: options.timeoutMs,
       signal: options.signal,
-    };
+      headers: token ? { Authorization: `Bearer ${token}` } : undefined,
+    });
 
-    if (options.token) {
-      config.headers = {
-        ...config.headers,
-        Authorization: `Bearer ${options.token}`,
-      };
-    } else {
-      const accessToken = await getAccessToken();
-      if (accessToken) {
-        config.headers = {
-          ...config.headers,
-          Authorization: `Bearer ${accessToken}`,
-        };
-      }
+  try {
+    const token = await getAccessToken();
+    let response: AxiosResponse<BaseResponse<T>>;
+    try {
+      response = await send(token);
+    } catch (err) {
+      const status = (err as AxiosError).response?.status;
+      if (status !== 401 || !token) throw err;
+      response = await send(await getAccessTokenAfterRejection(token));
     }
-
-    const response = await instance.request<BaseResponse<T>>(config);
     return {
       ...response.data,
       statusCode: response.status,
