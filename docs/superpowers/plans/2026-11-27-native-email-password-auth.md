@@ -274,3 +274,4 @@ Backend, web, and extension are built in parallel against this contract. Change 
   - The extension content script posts `{ type: "REHI_EXTENSION_READY" }`.
   - The web replies `{ type: "REHI_EXTENSION_SESSION", refreshToken }`. It replies only for a signed-in user, after it gets a pair from `POST /api/auth/extension-session`.
 - Web Next route handlers: `POST /api/auth/login`, `POST /api/auth/register`, `POST /api/auth/token` (returns `{ accessToken, expiresAt, user: { email, name } }`, or 401), `POST /api/auth/logout`, `POST /api/auth/extension-session`. The cookie is `rehi_session`.
+- Amendment 1 (2026-11-27, after E1): the extension's READY can fire before the web bridge mounts. On mount, the web bridge posts `{ type: "REHI_EXTENSION_PING" }` to `window.location.origin`. A content script with no session answers a PING with READY, just as it does on load. The web still replies only for a signed-in user.
