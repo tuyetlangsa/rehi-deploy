@@ -59,6 +59,12 @@ export async function revokeRehiSession(refreshToken: string) {
   }
 }
 
+export async function forwardRehiAuth(path: string, body: unknown) {
+  const res = await postRehiAuth(path, { body });
+  if (res.ok) return new NextResponse(null, { status: 204 });
+  return NextResponse.json(res.body, { status: res.status });
+}
+
 function parseTokenPair(data: unknown): TokenPair | null {
   if (typeof data !== "object" || data === null) return null;
   const d = data as Record<string, unknown>;
