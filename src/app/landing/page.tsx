@@ -1,6 +1,7 @@
 "use client";
 import Image from "next/image";
 import Link from "next/link";
+import { UserAvatar } from "@/components/user-avatar";
 import { getAccessToken } from "@auth0/nextjs-auth0";
 import { useSession } from "@/hooks/use-session";
 import { logout } from "@/lib/session";
@@ -78,13 +79,7 @@ function Header() {
           {isLoading && <p>Loading...</p>}
           {user ? (
             <div className="flex items-center gap-x-3">
-              <Image
-                src={user.picture || "/default-avatar.png"}
-                alt={user.name || "User Avatar"}
-                width={32}
-                height={32}
-                className="rounded-full"
-              />
+              <UserAvatar name={user.name} picture={user.picture} size={32} />
               <span className="text-sm">{user.email}</span>
               <button
                 type="button"
@@ -110,13 +105,7 @@ function Header() {
         <div className="md:hidden flex items-center gap-3">
           {user && (
             <div className="flex items-center gap-2">
-              <Image
-                src={user.picture || "/default-avatar.png"}
-                alt={user.name || "User Avatar"}
-                width={28}
-                height={28}
-                className="rounded-full"
-              />
+              <UserAvatar name={user.name} picture={user.picture} size={28} />
             </div>
           )}
           <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
@@ -166,13 +155,7 @@ function Header() {
                   ) : user ? (
                     <div className="flex flex-col gap-3">
                       <div className="flex items-center gap-3">
-                        <Image
-                          src={user.picture || "/default-avatar.png"}
-                          alt={user.name || "User Avatar"}
-                          width={32}
-                          height={32}
-                          className="rounded-full"
-                        />
+                        <UserAvatar name={user.name} picture={user.picture} size={32} />
                         <span className="text-sm text-gray-300">
                           {user.email}
                         </span>

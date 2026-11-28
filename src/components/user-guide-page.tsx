@@ -7,6 +7,7 @@ import React, { useEffect, useState } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import Link from "next/link";
+import { UserAvatar } from "@/components/user-avatar";
 import Image from "next/image";
 
 const NAV_ITEMS = [
@@ -71,13 +72,7 @@ function Header() {
           {isLoading && <p>Loading...</p>}
           {user ? (
             <div className="flex items-center gap-x-3">
-              <Image
-                src={user.picture || "/default-avatar.png"}
-                alt={user.name || "User Avatar"}
-                width={32}
-                height={32}
-                className="rounded-full"
-              />
+              <UserAvatar name={user.name} picture={user.picture} size={32} />
               <span className="text-sm">{user.email}</span>
               <button
                 type="button"
