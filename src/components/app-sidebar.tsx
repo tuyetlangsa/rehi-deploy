@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { usePathname } from "next/navigation";
 import {
   Sidebar,
@@ -179,13 +180,12 @@ export function AppSidebar() {
                   <Spinner variant="bars" />
                 ) : (
                   <>
-                    <Image
-                      src={user?.picture || ""}
-                      alt={user?.name || "User"}
-                      width={32}
-                      height={32}
-                      className="w-8 h-8 rounded-full"
-                    />
+                    <Avatar className="w-8 h-8">
+                      <AvatarImage src={user?.picture} alt={user?.name || "User"} />
+                      <AvatarFallback className="bg-gray-700 text-xs">
+                        {user?.name?.charAt(0).toUpperCase()}
+                      </AvatarFallback>
+                    </Avatar>
                     <span className="group-data-[collapsible=icon]:hidden truncate text-sm">
                       {user?.name}
                     </span>
